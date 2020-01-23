@@ -7,8 +7,24 @@
     </url>
 
     <url>
+        <loc>http://fang666hhh.github.io/article/01%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D/</loc>
+        <lastmod>2020-01-23T07:40:25.701Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://fang666hhh.github.io/article/%E5%88%9BPycharm%E5%92%8CAnaconda%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%8CTensorflow/</loc>
+        <lastmod>2019-12-04T01:50:33.587Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://fang666hhh.github.io/article/hexo-theme-huweihuang/</loc>
-        <lastmod>2019-06-23T02:56:23.013Z</lastmod>
+        <lastmod>2019-08-17T03:43:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
