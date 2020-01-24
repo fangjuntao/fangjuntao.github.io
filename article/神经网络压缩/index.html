@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Archives - never-ceasingwave | Blog
+          神经网络压缩 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fang666hhh.github.io/archive/">
+    <link rel="canonical" href="http://fang666hhh.github.io/article/神经网络压缩/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,8 +71,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/archive.jpg')
-            /*page*/
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
         
     }
     
@@ -85,10 +85,18 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>Archives</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">Hey, this is archives</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#科研积累" title="科研积累">科研积累</a>
+                            
+                        </div>
+                        <h1>神经网络压缩</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by never-ceasing wave on
+                            2020-01-24
+                        </span>
                     </div>
                 
 
@@ -191,278 +199,204 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
+    <!-- Modify by Yu-Hsuan Yen -->
 
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
-            
-                
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 archive">
-            <!-- 归档列表 -->
-            
-            
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-             <!-- 归档列表 -->
+                <h3 id="概念">概念</h3>
+<p>一个深度学习模型通常包含数以百万计甚至千万计的参数和十几层甚至几十层的网络，通常需要非常大的计算代价和存储空间。神经网络压缩是指通过改变网络结构或利用量化、近似的方法来减少网络的参数或存储空间， 在不影响神经网络性能的情况下，降低网络计算代价和存储空间。（引用自百度百科）</p>
+<h3 id="简介">简介</h3>
+<p>神经网络压缩简单来说通过有关方法来减少网络的参数和存储空间，在神经网络性能影响不大的情况下。<br>
+主要三种：</p>
+<ol>
+<li>近似:<br>
+近似类方法主要利用矩阵或张量分解的思想，通过少量参数重构原始网络参数矩阵或参数张量，以达到减少网络存储开销的目的。通常，在网络运行时，这些参数将会被适当重建，网络的运行时开销并没有得到有效减少。</li>
+<li>量化:<br>
+量化方法的主要思想是将网络参数的可能值从实数域映射到有限数集，或将网络参数用更少的比特数来表示。量化的方法将原本具有无限种可能的参数约束到少数几种参数中，再对这些参数进行重用，就可以减少网络存储开销。通过改变参数的数据类型，如将原本的64位浮点型量化为整形甚至布尔型，网络的运行时开销也将得到大幅度减少。</li>
+<li>裁剪:<br>
+网络裁剪的主要特点是会直接改变网络的结构。网络裁剪可以按粒度分为层级裁剪，神经元级裁剪和神经连接级裁剪。层级裁剪的裁减对象是网络层，裁剪的结果是获得更浅的网络。</li>
+</ol>
+<h3 id="研究意义">研究意义</h3>
+<p>神经网络压缩不但具有必要性，也具有可能性。首先，尽管神经网络通常是深度越深，效果越好，但针对具体的应用场景和需求，适当深度和参数数目的网络即能够满足。盲目加深网络复杂度所带来的微弱性能提升在许多应用场合意义并不大。其次，神经网络常常存在过参数化的问题，网络神经元的功能具有较大的重复性，即使在网络性能敏感的场景，大部分网络也可以被“安全地”压缩而不影响其性能。神经网络压缩可以有助于理解神经元作用机理和使神经网络模型部署在轻量级的设备上。<br>
+深度神经网络尽管在计算机视觉、语音识别、机器人技术等多个领域都取得了良好成果。深度学习的实际应用往往受限于其存储和运算规模。例如，VGG-16网络含有约1.4亿浮点数参数，假设每个参数存储为32位浮点数格式，则整个网络需要占用超过500兆存储空间。这样的计算量在只能通过高性能并行设备进行，且仍不具备很好的实时性。</p>
+<h3 id="方法">方法</h3>
+<p>a. 基于张量分解的网络压缩(张量是向量和矩阵的自然推广，向量可称为一阶张量，矩阵可称为二阶张量)<br>
+b. 基于量化的网络压缩<br>
+c. 基于裁剪的网络压缩</p>
+<h3 id="具体论文方法">具体论文方法</h3>
+<ol>
+<li>
+<p>二值神经网络:(准确率有待提高)<br>
+二值网络是非常极致的一种神经网络，它的权重、激活值只有+1 与-1 两种状态。<br>
+二值网络本身就是一种模型压缩方法，它能以更小的存储代价、计算代价实现相同的功能。<br>
+论文地址:<a href="https://arxiv.org/pdf/2001.05936v1.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/2001.05936v1.pdf</a></p>
+</li>
+<li>
+<p>ResNet压缩20倍，Facebook提出新型无监督模型压缩量化方法:<br>
+论文地址：<a href="https://arxiv.org/abs/1907.05686" target="_blank" rel="noopener">https://arxiv.org/abs/1907.05686</a><br>
+本文提出的量化方法注重于恢复网络的输出。跟PQ方法相比，本文是注重恢复压缩后的权重。同时，在训练的过程中，本文也运用了蒸馏的思想，用于提升压缩网络的精度。<br>
+算法： 全连接层量化</p>
+</li>
+</ol>
 
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2020">
-                    <span class="tag-text">2020</span>
-                </span>
-                <ul>
                 
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li >
-                    01-24
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/article/神经网络压缩/" style="color: #0085a1">
-                        <span>
-                            神经网络压缩
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li >
-                    01-23
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/article/创Pycharm和Anaconda环境搭建，Tensorflow/" style="color: #0085a1">
-                        <span>
-                            创Pycharm和Anaconda环境搭建，Tensorflow
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li >
-                    01-23
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/article/01深度学习框架介绍/" style="color: #0085a1">
-                        <span>
-                            深度学习框架介绍
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/创Pycharm和Anaconda环境搭建，Tensorflow/" data-toggle="tooltip" data-placement="top" title="创Pycharm和Anaconda环境搭建，Tensorflow">Next Post &rarr;</a>
+                        </li>
+                    
                 </ul>
-            </div>
-            
-            <div class="one-tag-list">
-                <span class="fa fa-calendar-times-o listing-seperator" id="2017">
-                    <span class="tag-text">2017</span>
-                </span>
-                <ul>
-                
-                  <!-- <li class="listing-item">
-                  <time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date:"%Y-%m-%d" }}</time>
-                  <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a>
-                  </li> -->
-                 <li >
-                    09-18
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                    <a href="/article/hexo-theme-huweihuang/" style="color: #0085a1">
-                        <span>
-                            [Hexo] Theme HuWeihuang
-                        </span>
-                    </a>
-                    <!-- <p class="post-meta">{{ post.date | date:"%Y-%m-%d" }}</p> -->
-                </li>
-                
-                </ul>
-            </div>
-            
-
-
-        </div>
-    </div>
-</div>
-
-<style type="text/css">
-
-   @media (min-width: 992px) {
-   .archive {
-       margin-left: 8.33333333%;
-       padding-right: 26.333333%;
-   }
-}
-</style>
-
-<style type="text/css">
-   @media (min-width: 1200px){
-   .archive {
-   margin-left: 16.66666667%;
-   padding-right: 16.666667%;
-   }
-}
-</style>
-
 
                 <br>
 
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
                 <!-- require APlayer -->
                 
 
-                <!-- 如果开启评论功能 -->
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#科研积累" title="科研积累">科研积累</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://me.csdn.net/qq_42804626" target="_blank">CSDN Blog potterr</a></li>
+                    
+                        <li><a href="https://www.cnblogs.com/never-ceasing-wave/" target="_blank">博客园 一只有理想的程序员</a></li>
+                    
+                </ul>
                 
             </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Featured Tags -->
-
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-            <a href="/tags/#课程笔记" title="课程笔记" rel="1">课程笔记</a>
-            
-        
-            
-            <a href="/tags/#Hexo" title="Hexo" rel="1">Hexo</a>
-            
-        
-            
-            <a href="/tags/#新建,模板,小书匠" title="新建,模板,小书匠" rel="1">新建,模板,小书匠</a>
-            
-        
-            
-            <a href="/tags/#科研积累" title="科研积累" rel="1">科研积累</a>
-            
-        
+        </div>
     </div>
-</section>
+</article>
 
-        <hr>
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
 
-        
-            <img id = "avatar_pic" src="/img/avatar/head.jpg" />
-        
 
-        
-            <p>在0和1的世界里，实现从0到1的蜕变</p>
-        
 
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-            
-            
 
-            
 
-            
 
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/fang666hhh/fang666hhh">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-            
-        </ul>
-    </div>
-</section>
 
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/article/神经网络压缩/">神经网络压缩</a>
-        </li>
-      
-        <li>
-          <a href="/article/创Pycharm和Anaconda环境搭建，Tensorflow/">创Pycharm和Anaconda环境搭建，Tensorflow</a>
-        </li>
-      
-        <li>
-          <a href="/article/01深度学习框架介绍/">深度学习框架介绍</a>
-        </li>
-      
-        <li>
-          <a href="/article/hexo-theme-huweihuang/">[Hexo] Theme HuWeihuang</a>
-        </li>
-      
-    </ul>
-  </div>
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
-        <hr>
-    
-        <!-- Friends Blog -->
 
-<h5>FRIENDS</h5>
-<ul class="list-inline">
-
-    
-        <li><a href="https://me.csdn.net/qq_42804626" target="_blank">CSDN Blog potterr</a></li>
-    
-        <li><a href="https://www.cnblogs.com/never-ceasing-wave/" target="_blank">博客园 一只有理想的程序员</a></li>
-    
-</ul>
-
-        <hr>
-    
-        
-    <h5>ARCHIVES</h5>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">September 2017</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-
-        <hr>
-    
-</div>
-
-        
-    </div>
-</div>
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
 
 
     <!-- Footer -->
