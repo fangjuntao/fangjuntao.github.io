@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          神经网络压缩 - never-ceasingwave | Blog
+          网络模型 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fang666hhh.github.io/article/神经网络压缩/">
+    <link rel="canonical" href="http://fang666hhh.github.io/article/02网络模型/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,14 +88,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#学术阅读" title="学术阅读">学术阅读</a>
+                              <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
                             
                         </div>
-                        <h1>神经网络压缩</h1>
+                        <h1>网络模型</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by never-ceasing wave on
-                            2020-01-24
+                            2020-01-29
                         </span>
                     </div>
                 
@@ -212,39 +212,116 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="概念">概念</h3>
-<p>一个深度学习模型通常包含数以百万计甚至千万计的参数和十几层甚至几十层的网络，通常需要非常大的计算代价和存储空间。神经网络压缩是指通过改变网络结构或利用量化、近似的方法来减少网络的参数或存储空间， 在不影响神经网络性能的情况下，降低网络计算代价和存储空间。（引用自百度百科）</p>
-<h3 id="简介">简介</h3>
-<p>神经网络压缩简单来说通过有关方法来减少网络的参数和存储空间，在神经网络性能影响不大的情况下。<br>
-主要三种：</p>
-<ol>
-<li>近似:<br>
-近似类方法主要利用矩阵或张量分解的思想，通过少量参数重构原始网络参数矩阵或参数张量，以达到减少网络存储开销的目的。通常，在网络运行时，这些参数将会被适当重建，网络的运行时开销并没有得到有效减少。</li>
-<li>量化:<br>
-量化方法的主要思想是将网络参数的可能值从实数域映射到有限数集，或将网络参数用更少的比特数来表示。量化的方法将原本具有无限种可能的参数约束到少数几种参数中，再对这些参数进行重用，就可以减少网络存储开销。通过改变参数的数据类型，如将原本的64位浮点型量化为整形甚至布尔型，网络的运行时开销也将得到大幅度减少。</li>
-<li>裁剪:<br>
-网络裁剪的主要特点是会直接改变网络的结构。网络裁剪可以按粒度分为层级裁剪，神经元级裁剪和神经连接级裁剪。层级裁剪的裁减对象是网络层，裁剪的结果是获得更浅的网络。</li>
-</ol>
-<h3 id="研究意义">研究意义</h3>
-<p>神经网络压缩不但具有必要性，也具有可能性。首先，尽管神经网络通常是深度越深，效果越好，但针对具体的应用场景和需求，适当深度和参数数目的网络即能够满足。盲目加深网络复杂度所带来的微弱性能提升在许多应用场合意义并不大。其次，神经网络常常存在过参数化的问题，网络神经元的功能具有较大的重复性，即使在网络性能敏感的场景，大部分网络也可以被“安全地”压缩而不影响其性能。神经网络压缩可以有助于理解神经元作用机理和使神经网络模型部署在轻量级的设备上。<br>
-深度神经网络尽管在计算机视觉、语音识别、机器人技术等多个领域都取得了良好成果。深度学习的实际应用往往受限于其存储和运算规模。例如，VGG-16网络含有约1.4亿浮点数参数，假设每个参数存储为32位浮点数格式，则整个网络需要占用超过500兆存储空间。这样的计算量在只能通过高性能并行设备进行，且仍不具备很好的实时性。</p>
-<h3 id="方法">方法</h3>
-<p>a. 基于张量分解的网络压缩(张量是向量和矩阵的自然推广，向量可称为一阶张量，矩阵可称为二阶张量)<br>
-b. 基于量化的网络压缩<br>
-c. 基于裁剪的网络压缩</p>
-<h3 id="具体论文方法">具体论文方法</h3>
+                <h3 id="网络模型介绍">网络模型介绍</h3>
+<p>网络模型指含多隐层以及多层感知器的一种结构。神经网络的构建其实也可以看成一个点-线-面的构造过程。<br>
+点：即神经网络里许多计算节点（在神经网络里，称为神经元 Cell），<br>
+线：由一些节点再构成一层处理层（这一层就可以理解为对数据的某个<br>
+抽象表达），<br>
+面：由多个处理层构建起来就形成了一个神经网络。<br>
+这些点的连接方式不同就可以形成各种各样的不同的表达模型，即我们经常说的 cnn，Rnn，dnn 等<br>
+<strong><em>网络模型分类</em></strong>：大部分神经网络都可以用深度(depth)和连接结构(connection)来定义，笼统的说，神经网络也可以分为有监督的神经网络和无/半监督学习。<br>
+<em>监督学习网络</em>：循环网络（recurrent NN），卷积网络（convolutional NN），<br>
+<em>无监督学习网络</em>：深度生成模型，自编码器</p>
+<h4 id="循环网络-rnn">循环网络 RNN:</h4>
+<p>RNN 的目的使用来处理序列数据。传统的神经网络没有考虑到时间的因素，也就是其并不能记忆之前存储的内容。而 Rnn 解决了这个问题，Rnn 包含循环网络，允许信息的持久化.<br>
+为了加强这种“记忆能力”，人们开发各种各样的变形体，如非常著<br>
+名的 Long Short-term Memory(LSTM)，用于解决“长期及远距离的依赖<br>
+关系”</p>
 <ol>
 <li>
-<p>二值神经网络:(准确率有待提高)<br>
-二值网络是非常极致的一种神经网络，它的权重、激活值只有+1 与-1 两种状态。<br>
-二值网络本身就是一种模型压缩方法，它能以更小的存储代价、计算代价实现相同的功能。<br>
-论文地址:<a href="https://arxiv.org/pdf/2001.05936v1.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/2001.05936v1.pdf</a></p>
+<p>Long Short-term Memory(LSTM):<br>
+长期短期记忆 - 这是一种循环型神经网络（RNN），允许数据在网络中向前和向后流动。<br>
+<img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/1.png" alt="enter description here"></p>
+<p>LSTM适合于处理和预测时间序列中间隔和延迟非常长的重要事件，隐马尔可夫模型和其他序列学习方法给LSTM带来了优势 。</p>
 </li>
 <li>
-<p>ResNet压缩20倍，Facebook提出新型无监督模型压缩量化方法:<br>
-论文地址：<a href="https://arxiv.org/abs/1907.05686" target="_blank" rel="noopener">https://arxiv.org/abs/1907.05686</a><br>
-本文提出的量化方法注重于恢复网络的输出。跟PQ方法相比，本文是注重恢复压缩后的权重。同时，在训练的过程中，本文也运用了蒸馏的思想，用于提升压缩网络的精度。<br>
-算法： 全连接层量化</p>
+<p>双向循环网络(Bi-directional RNN）<br>
+是现阶段自然语言处理和语音分析中的重要模型。开发双向循环网络的原因是语言/语音的构成取决于上下文，即“现在”依托于“过去”和“未来”。单向的循环网络仅着重于从“过去”推出“现在”，而无法对“未来”的依赖性有效的建模。</p>
+</li>
+<li>
+<p>应用场景<br>
+语音分析，文字分析，时间序列分析。主要的重点就是数据之间存在前后依赖关系，有序列关系。一般首选 LSTM，如果预测<br>
+对象同时取决于过去和未来，可以选择双向结构，如双向LSTM。</p>
+</li>
+</ol>
+<h4 id="递归神经网络">递归神经网络</h4>
+<ol>
+<li>简介：<br>
+递归神经网络（recursive neural network）是具有树状阶层结构且网络节点按其连接顺序对输入信息进行递归的人工神经网络（Artificial Neural Network, ANN），是深度学习（deep learning）算法之一 。递归神经网络（recursive neural network）提出于1990年，被视为循环神经网络（recurrent neural network）的推广 。当递归神经网络的每个父节点都仅与一个子节点连接时，其结构等价于全连接的循环神经网络。递归神经网络可以引入门控机制（gated mechanism）以学习长距离依赖 递归神经网络具有可变的拓扑结构且权重共享，被用于包含结构关系的机器学习任务，在自然语言处理（Natural Language Processing, NLP）领域有受到关注 。</li>
+</ol>
+<ol start="2">
+<li><strong>递归神经网络和循环神经网络不同，它的计算图结构是树状结构而不是网状结构</strong>。递归循环网络的目标和循环网络相似，也是希望解决数据之间的长期依赖问题。而且其比较好的特点是用树状可以降低序列的长度，但和其他树状数据结构一样，如何构造最佳的树状结构如平衡树/平衡二叉树并不容易。<br>
+<strong><em>应用</em></strong>：<br>
+自然语言和自然场景解析</li>
+<li>研究意义：<br>
+因为神经网络的输入层单元个数是固定的，因此必须用循环或者递归的方式来处理长度可变的输入。循环神经网络实现了前者，通过将长度不定的输入分割为等长度的小块，然后再依次的输入到网络中，从而实现了神经网络对变长输入的处理。egg：当我们处理一句话的时候，我们可以把一句话看作是词组成的序列，然后，每次向循环神经网络输入一个词，如此循环直至整句话输入完毕，循环神经网络将产生对应的输出。如此，我们就能处理任意长度的句子了。然而，有时候把句子看做是词的序列是不够的，比如下面这句话『两个外语学院的学生』：<br>
+<img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/2.png" alt="enter description here"><br>
+不同的语法解析树则对应了不同的意思。一个是『两个外语学院的/学生』，另一个是『两个/外语学院的学生』。<br>
+<strong>为了能够让模型区分出两个不同的意思，我们的模型必须能够按照树结构去处理信息，而不是序列，这就是递归神经网络的作用</strong>。<strong>当面对按照树/图结构处理信息更有效的任务时，递归神经网络通常都会获得不错的结果</strong>。</li>
+</ol>
+<h4 id="卷积网络-cnn">卷积网络 CNN</h4>
+<ol>
+<li>简介:<br>
+特殊的深层的神经网络模型，他的特殊型体现在两个方面，一方面他的神经元连接是非全连接的，另一方面同一层中某些神经元之间的连接的权重是共享的（即相同的）。卷积网络的精髓其实就是在多个空间位置上共享参数。</li>
+<li>目前比较流行的卷积网络模型：<br>
+lenet ， alexnet ， Network in NetWork ， VGG ， Googlenet,Resnet</li>
+<li>应用场景：<br>
+虽然我们一般都把 CNN 和图片联系在一起，但事实上 CNN可以处理大部分格状结构化数据(Grid-like Data)。举个例子，图片的像素是二维的格状数据，时间序列在等时间上抽取相当于一维的的格状数据，而视频数据可以理解为对应视频帧宽度、高度、时间的三维数</li>
+</ol>
+<h4 id="深度信念网络deep-belief-neural-networks">深度信念网络(Deep Belief Neural Networks)</h4>
+<ol>
+<li>
+<p>简介：<br>
+主要有两个部分: 1. 堆叠的受限玻尔兹曼机(Stacked RBM) 2. 一层普通的前馈网络。<br>
+<strong>本质上是在做逐层无监督学习，每次学习一层网络结构再逐步加深网络</strong></p>
+</li>
+<li>
+<p>具体过程：<br>
+DBN是由Hinton在2006年提出的一种概率生成模型, 由多个限制玻尔兹曼机(RBM)堆栈而成:<br>
+<img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/3.png" alt="enter description here"><br>
+在训练时, Hinton采用了逐层无监督的方法来学习参数。首先把数据向量x和第一层隐藏层作为一个RBM, 训练出这个RBM的参数(连接x和h1的权重, x和h1各个节点的偏置等等), 然后固定这个RBM的参数, 把h1视作可见向量, 把h2视作隐藏向量, 训练第二个RBM, 得到其参数, 然后固定这些参数, 训练h2和h3构成的RBM…<br>
+在使用上述的逐层无监督方法学得节点之间的权重以及节点的偏置之后(亦即初始化), 可以在DBN的最顶层再加一层, 来表示我们希望得到的输出, 然后计算模型得到的输出和希望得到的输出之间的误差, 利用后向反馈的方法来进一步优化之前设置的初始权重。因为我们已经使用逐层无监督方法来初始化了权重值, 使其比较接近最优值, 解决了之前多层神经网络训练时存在的问题, 能够得到很好的效果。</p>
+</li>
+<li>
+<p>应用场景：现在来说 DBN 更多是了解深度学习“哲学”和“思维模式”的一个手段，在实际应用中还是推荐 CNN/RNN 等，类似的深度玻尔兹曼机也有类似的特性但工业界使用较少</p>
+</li>
+</ol>
+<h4 id="生成式对抗网络generative-adversarial-networks">生成式对抗网络(Generative Adversarial Networks)</h4>
+<ol>
+<li>
+<p>简介：<br>
+简单的说，GAN 训练两个网络：1. 生成网络用于生成图片使其与训练数据相似 2. 判别式网络用于判断生成网络中得到的图片是否是真的是训练数据还是伪装的数据。</p>
+</li>
+<li>
+<p>应用：<br>
+应用场景：现阶段的 GAN 还主要是在图像领域比较流行，但很多人都认为它有很大的潜力大规模推广到声音、视频领域。</p>
+</li>
+</ol>
+<h4 id="自编码器-autoencoder">自编码器 Autoencoder</h4>
+<p><a href="https://www.cnblogs.com/yifdu25/p/8268214.html" target="_blank" rel="noopener">https://www.cnblogs.com/yifdu25/p/8268214.html</a></p>
+<ol>
+<li>
+<p>简介：<br>
+自编码器（autoencoder, AE）是一类在<strong>半监督学习和非监督学习</strong>中使用的人工神经网络（Artificial Neural Networks, ANNs），其功能是通过将输入信息作为学习目标，对输入信息进行表征学习（representation learning）。<br>
+<em>自编码器包含编码器（encoder）和解码器（decoder）两部分</em> 。<br>
+按学习范式，自编码器可以被分为收缩自编码器（undercomplete autoencoder）、正则自编码器（regularized autoencoder）和变分自编码器（Variational AutoEncoder, VAE），其中前两者是判别模型、后者是生成模型 。按构筑类型，自编码器可以是前馈结构或递归结构的神经网络。<br>
+自编码器具有一般意义上表征学习算法的功能，被应用于降维（dimensionality reduction）和异常值检测（anomaly detection）。包含卷积层构筑的自编码器可被应用于计算机视觉问题，包括图像降噪（image denoising） 、神经风格迁移（neural style transfer）等。</p>
+</li>
+<li>
+<p>过程：<br>
+Autoencoder 主要有 2 个部分：1. 编码器(Encoder) 2. 解码器(Decoder)<br>
+<img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/4.png" alt="enter description here"><br>
+<strong>事实上我们真正学习到是中间的用红色标注的部分，即数在低维<br>
+度的压缩表示</strong>。评估自编码器的方法是重建误差，即输出的那个<br>
+数字 2 和原始输入的数字 2 之间的差别，当然越小越好，自编码<br>
+器也可以用来进行数据压缩(Data Compression)，从原始数据中<br>
+提取最重要的特征。发现输入的那个数字 2 和输出的数字 2 略有<br>
+不同，<strong>这是因为数据压缩中的损失。</strong></p>
+</li>
+<li>
+<p>应用场景：<br>
+主要用于降维(Dimension Reduction)，同时也有专门<br>
+用 于 去 除 噪 音 还 原 原 始 数 据 的 去 噪 编 码 器 (Denoising Autoencoder)</p>
 </li>
 </ol>
 
@@ -254,13 +331,9 @@ c. 基于裁剪的网络压缩</p>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/article/02网络模型/" data-toggle="tooltip" data-placement="top" title="网络模型">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/article/创Pycharm和Anaconda环境搭建，Tensorflow/" data-toggle="tooltip" data-placement="top" title="创Pycharm和Anaconda环境搭建，Tensorflow">Next Post &rarr;</a>
+                            <a href="/article/神经网络压缩/" data-toggle="tooltip" data-placement="top" title="神经网络压缩">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -318,7 +391,7 @@ c. 基于裁剪的网络压缩</p>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#学术阅读" title="学术阅读">学术阅读</a>
+                          <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
                         
                     </div>
                 </section>
