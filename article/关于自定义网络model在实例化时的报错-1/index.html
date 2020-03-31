@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          never-ceasingwave | Blog
+          关于自定义网络model在实例化时的报错-1 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fangjuntao.github.io/404.html">
+    <link rel="canonical" href="http://fangjuntao.github.io/article/关于自定义网络model在实例化时的报错-1/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -71,8 +71,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/404.png')
-            /*page*/
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
         
     }
     
@@ -85,10 +85,18 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>never-ceasing wave</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">你来到了没有知识的荒原</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#课程笔记" title="课程笔记">课程笔记</a>
+                            
+                        </div>
+                        <h1>关于自定义网络model在实例化时的报错-1</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by never-ceasing wave on
+                            2020-03-31
+                        </span>
                     </div>
                 
 
@@ -191,24 +199,179 @@
 
 
     <!-- Main Content -->
-    
-<!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/header_img/404.png')">
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>404</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">你来到了没有知识的荒原</span>
-                </div>
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <ol>
+<li>错误代码</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = inception_v4.InceptionV4</span><br></pre></td></tr></table></figure>
+<p>其中InceptionV4为inception_v4.py的自定义类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionV4(tf.keras.Model):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionV4, self).__init__()</span><br><span class="line">        self.stem = Stem()</span><br><span class="line">        self.inception_a = build_inception_block_a(4)</span><br><span class="line">        self.reduction_a = ReductionA(k=192, l=224, m=256, n=384)</span><br><span class="line">        self.inception_b = build_inception_block_b(7)</span><br><span class="line">        self.reduction_b = ReductionB()</span><br><span class="line">        self.inception_c = build_inception_block_c(3)</span><br><span class="line">        self.avgpool = tf.keras.layers.AveragePooling2D(pool_size=(8, 8))</span><br><span class="line">        self.dropout = tf.keras.layers.Dropout(rate=0.2)</span><br><span class="line">        self.flat = tf.keras.layers.Flatten()</span><br><span class="line">        self.fc = tf.keras.layers.Dense(units=NUM_CLASSES,</span><br><span class="line">                                        activation=tf.keras.activations.softmax)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, mask=None):</span><br><span class="line">        x = self.stem(inputs, training=training)</span><br><span class="line">        x = self.inception_a(x, training=training)</span><br><span class="line">        x = self.reduction_a(x, training=training)</span><br><span class="line">        x = self.inception_b(x, training=training)</span><br><span class="line">        x = self.reduction_b(x, training=training)</span><br><span class="line">        x = self.inception_c(x, training=training)</span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = self.dropout(x, training=training)</span><br><span class="line">        x = self.flat(x)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+<p>报错：<br>
+<img src="/img/article/%E5%85%B3%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BD%91%E7%BB%9Cmodel%E5%9C%A8%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%97%B6%E7%9A%84%E6%8A%A5%E9%94%99-1/2020.3.31-1.png" alt="enter description here"></p>
+<p>改正：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = inception_v4.InceptionV4() #加括号</span><br></pre></td></tr></table></figure>
+<p>分析：==记得加（），否则只是一个类，不是一个实例，下面用build（）时会报错==</p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/Tensorflow2.0实现Resnet/" data-toggle="tooltip" data-placement="top" title="Tensorflow2.0实现Resnet">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#课程笔记" title="课程笔记">课程笔记</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://me.csdn.net/qq_42804626" target="_blank">CSDN Blog potterr</a></li>
+                    
+                        <li><a href="https://www.cnblogs.com/never-ceasing-wave/" target="_blank">博客园 一只有理想的程序员</a></li>
+                    
+                </ul>
+                
             </div>
         </div>
     </div>
-</header>
+</article>
 
+
+
+
+
+
+
+
+<!-- async load function -->
 <script>
-    document.body.classList.add('page-fullscreen');
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
 </script>
 
 
