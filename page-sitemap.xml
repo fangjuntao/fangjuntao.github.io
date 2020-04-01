@@ -21,14 +21,14 @@
     </url>
     
     <url>
-        <loc>http://fangjuntao.github.io/tags/</loc>
+        <loc>http://fangjuntao.github.io/archive/</loc>
         <lastmod>2019-08-17T03:43:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://fangjuntao.github.io/archive/</loc>
+        <loc>http://fangjuntao.github.io/tags/</loc>
         <lastmod>2019-08-17T03:43:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
