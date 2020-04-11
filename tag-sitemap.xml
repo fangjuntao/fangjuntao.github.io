@@ -37,13 +37,6 @@
     </url>
 
     <url>
-        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-        <lastmod>2020-03-29T09:11:54.437Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://fangjuntao.github.io/tags/%E5%8E%9F%E5%88%9B%EF%BC%8C%E5%BC%80%E5%8F%91%E9%94%99%E8%AF%AF%E8%AE%B0%E5%BD%95/</loc>
         <lastmod>2020-03-31T12:28:44.617Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -51,8 +44,15 @@
     </url>
 
     <url>
-        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%EF%BC%8C%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0/</loc>
-        <lastmod>2020-04-01T07:46:07.022Z</lastmod>
+        <loc>http://fangjuntao.github.io/tags/python%E5%BC%80%E5%8F%91/</loc>
+        <lastmod>2020-04-11T03:06:09.021Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+        <lastmod>2020-04-11T03:20:03.368Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

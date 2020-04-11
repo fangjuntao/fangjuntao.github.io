@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          关于自定义网络model在实例化时的报错-1 - never-ceasingwave | Blog
+          python之图片处理 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fangjuntao.github.io/article/关于自定义网络model在实例化时的报错-1/">
+    <link rel="canonical" href="http://fangjuntao.github.io/article/python之图片处理/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,14 +88,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#原创，开发错误记录" title="原创，开发错误记录">原创，开发错误记录</a>
+                              <a class="tag" href="/tags/#python开发" title="python开发">python开发</a>
                             
                         </div>
-                        <h1>关于自定义网络model在实例化时的报错-1</h1>
+                        <h1>python之图片处理</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by never-ceasing wave on
-                            2020-03-31
+                            2020-04-11
                         </span>
                     </div>
                 
@@ -212,18 +212,23 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <ol>
-<li>错误代码</li>
+                <h1 id="批量改变图片的后缀">批量改变图片的后缀</h1>
+<h2 id="改文件夹中图片的大小输出到新的文件夹">改文件夹中图片的大小，输出到新的文件夹</h2>
+<ol>
+<li>完整代码</li>
 </ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = inception_v4.InceptionV4</span><br></pre></td></tr></table></figure>
-<p>其中InceptionV4为inception_v4.py的自定义类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionV4(tf.keras.Model):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionV4, self).__init__()</span><br><span class="line">        self.stem = Stem()</span><br><span class="line">        self.inception_a = build_inception_block_a(4)</span><br><span class="line">        self.reduction_a = ReductionA(k=192, l=224, m=256, n=384)</span><br><span class="line">        self.inception_b = build_inception_block_b(7)</span><br><span class="line">        self.reduction_b = ReductionB()</span><br><span class="line">        self.inception_c = build_inception_block_c(3)</span><br><span class="line">        self.avgpool = tf.keras.layers.AveragePooling2D(pool_size=(8, 8))</span><br><span class="line">        self.dropout = tf.keras.layers.Dropout(rate=0.2)</span><br><span class="line">        self.flat = tf.keras.layers.Flatten()</span><br><span class="line">        self.fc = tf.keras.layers.Dense(units=NUM_CLASSES,</span><br><span class="line">                                        activation=tf.keras.activations.softmax)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, mask=None):</span><br><span class="line">        x = self.stem(inputs, training=training)</span><br><span class="line">        x = self.inception_a(x, training=training)</span><br><span class="line">        x = self.reduction_a(x, training=training)</span><br><span class="line">        x = self.inception_b(x, training=training)</span><br><span class="line">        x = self.reduction_b(x, training=training)</span><br><span class="line">        x = self.inception_c(x, training=training)</span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = self.dropout(x, training=training)</span><br><span class="line">        x = self.flat(x)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
-<p>报错：<br>
-<img src="/img/article/%E5%85%B3%E4%BA%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BD%91%E7%BB%9Cmodel%E5%9C%A8%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%97%B6%E7%9A%84%E6%8A%A5%E9%94%99-1/2020.3.31-1.png" alt="enter description here"></p>
-<p>改正：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = inception_v4.InceptionV4() #加括号</span><br></pre></td></tr></table></figure>
-<p>分析：==记得加（），否则只是一个类，不是一个实例，下面用build（）时会报错==</p>
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">from PIL import Image</span><br><span class="line">import os.path</span><br><span class="line">import glob</span><br><span class="line">def convertjpg(jpgfile,outdir,width=300,height=300):</span><br><span class="line">    img=Image.open(jpgfile)</span><br><span class="line">    new_img=img.resize((width,height),Image.BILINEAR)</span><br><span class="line">    new_img.save(os.path.join(outdir,os.path.basename(jpgfile)))</span><br><span class="line">for jpgfile in glob.glob(&quot;C:\\Users\\fang\Desktop\IT\\*.bmp&quot;):</span><br><span class="line">    convertjpg(jpgfile,&quot;C:\\Users\\fang\\Desktop\\IT2&quot;)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>分段解析：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from PIL import Image</span><br></pre></td></tr></table></figure>
+<p>==Image是从PIL中引入的，不能直接import Image会找不到，pip也是只能下载PIL,无法只下载Image==</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">for jpgfile in glob.glob(&quot;C:\\Users\\fang\Desktop\IT\\*.bmp&quot;):</span><br><span class="line">    convertjpg(jpgfile,&quot;C:\\Users\\fang\\Desktop\\IT2&quot;)</span><br></pre></td></tr></table></figure>
+<p>重点：路径：“C:\Users\fang\Desktop\IT\*.bmp”</p>
+<p><img src="/img/article/python%E4%B9%8B%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86/2020.4.11-1.png" alt="enter description here"><br>
+这样便可以操作到该文件中后缀为.bmp的全部图片</p>
+<h2 id="改文件夹中图片的后缀并删除原来图片">改文件夹中图片的后缀，并删除原来图片</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">#改文件夹中图片的后缀，并删除原来图片</span><br><span class="line"></span><br><span class="line">import os</span><br><span class="line"></span><br><span class="line">from PIL import Image</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># bmp 转换为jpg</span><br><span class="line">def bmpToJpg(file_path):</span><br><span class="line">    for fileName in os.listdir(file_path):</span><br><span class="line">        # print(fileName)</span><br><span class="line">        newFileName = fileName[0:fileName.find(&quot;_&quot;)]+&quot;.jpg&quot;</span><br><span class="line">        print(newFileName)</span><br><span class="line">        im = Image.open(file_path+&quot;\\&quot;+fileName)</span><br><span class="line">        im.save(file_path+&quot;\\&quot;+newFileName)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 删除原来的位图</span><br><span class="line">def deleteImages(file_path, imageFormat):</span><br><span class="line">    command = &quot;del &quot;+file_path+&quot;\\*.&quot;+imageFormat</span><br><span class="line">    os.system(command)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">    file_path = &quot;C:\\Users\\fangj\\Desktop\\IT2&quot;</span><br><span class="line">    bmpToJpg(file_path)</span><br><span class="line">    deleteImages(file_path, &quot;bmp&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &apos;__main__&apos;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
@@ -231,12 +236,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/python之图片处理/" data-toggle="tooltip" data-placement="top" title="python之图片处理">&larr; Previous Post</a>
+                            <a href="/article/GoogleNet-Iception副本/" data-toggle="tooltip" data-placement="top" title="GoogleNet-Iception">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/article/Tensorflow2.0实现Resnet/" data-toggle="tooltip" data-placement="top" title="Tensorflow2.0实现Resnet">Next Post &rarr;</a>
+                            <a href="/article/关于自定义网络model在实例化时的报错-1/" data-toggle="tooltip" data-placement="top" title="关于自定义网络model在实例化时的报错-1">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -294,7 +299,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#原创，开发错误记录" title="原创，开发错误记录">原创，开发错误记录</a>
+                          <a class="tag" href="/tags/#python开发" title="python开发">python开发</a>
                         
                     </div>
                 </section>
