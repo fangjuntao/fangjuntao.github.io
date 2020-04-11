@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          GoogleNet-Iception - never-ceasingwave | Blog
+          自监督学习 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fangjuntao.github.io/article/GoogleNet-Iception副本/">
+    <link rel="canonical" href="http://fangjuntao.github.io/article/自监督学习/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -91,7 +91,7 @@
                               <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
                             
                         </div>
-                        <h1>GoogleNet-Iception</h1>
+                        <h1>自监督学习</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by never-ceasing wave on
@@ -212,11 +212,60 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <ol>
-<li>文档：GoogleNet-Iception</li>
-<li>==作者：方俊涛==</li>
-<li>链接：<a href="http://note.youdao.com/noteshare?id=2f934ffc28f1d5746ad61c514cad3510&amp;sub=E504FB8E7AB7446AA13895431D79824C" target="_blank" rel="noopener">http://note.youdao.com/noteshare?id=2f934ffc28f1d5746ad61c514cad3510&amp;sub=E504FB8E7AB7446AA13895431D79824C</a></li>
+                <h2 id="自监督学习简介">自监督学习简介</h2>
+<p>(转载 <a href="https://zhuanlan.zhihu.com/p/66063089" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089</a>)</p>
+<ol>
+<li>自监督学习的核心，在于<strong>如何自动为数据产生标签</strong>。例如输入一张图片，把图片随机旋转一个角度，然后把旋转后的图片作为输入，随机旋转的角度作为标签。再例如，把输入的图片均匀分割成3X3的格子，每个格子里面的内容作为一个patch，随机打乱patch的排列顺序，然后用打乱顺序的patch作为输入，正确的排列顺序作为label。类似这种自动产生的标注，完全无需人工参与</li>
+<li>自监督学习如何评价性能？<strong>自监督学习性能的高低，主要通过模型学出来的feature的质量来评价。feature质量的高低，主要是通过迁移学习的方式，把feature用到其它视觉任务中</strong>（分类、分割、物体检测…），然后通过视觉任务的结果的好坏来评价。目前没有统一的、标准的评价方式。</li>
+<li>自监督学习的一个研究套路。<strong>前面说到，自监督学习的核心是如何给输入数据自动生成标签</strong>。之前的很多工作都是围绕这个核心展开的。<strong>一般的套路是：首先提出一个新的自动打标签的辅助任务（pretext task，例如：旋转图片、打乱patch顺序），用辅助任务自动生成标签，然后做实验、测性能、发文章</strong>。每年都有新的辅助任务被提出来，自监督学习的性能也在不断提高，有的甚至已经接近监督学习的性能。总体上说，或者是提出一种完全新的辅助任务，或者是把多个旧的辅助任务组合到一起作为一个“新”的辅助任务。</li>
 </ol>
+<h2 id="从扩展性的角度看自监督学习的发展">从扩展性的角度看自监督学习的发展</h2>
+<p>（转载： <a href="https://zhuanlan.zhihu.com/p/66063089%EF%BC%89" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089）</a><br>
+从扩展性（scalability）的角度看，需要搞清楚自监督学习和以下三方面的关系：</p>
+<ol>
+<li><strong>扩展数据集</strong>。主要研究的问题是：训练自监督学习模型的数据集的大小，跟性能是否有某种关系？能否通过增大数据集来提升性能？</li>
+<li><strong>扩展模型复杂度</strong>。<strong>自监督学习，本质上是要训练出来一个feature提取器（一个CNN网络）</strong>。这个CNN网络的复杂度，跟性能是否有某种关系？能否通过增大网络复杂度来提升性能？（比如ResNet50比AlexNet复杂，用ResNet50，效果比AlexNet好吗？）</li>
+<li><strong>扩展辅助任务的难度</strong>。<strong>自监督学习的核心，是用一个辅助任务（pretext task）来自动为数据生成标签</strong>。这个辅助任务的难度，跟性能是否有某种关系？能否通过增大辅助任务的难度来提升性能？（比如拼图这个辅助任务，把图片分割成2x2个patch，还是4x4个patch？4x4个patch的难度更大）</li>
+</ol>
+<h2 id="基于图像的自监督学习">基于图像的自监督学习</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/94385056" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/94385056</a><br>
+研究人员针对图像的自监督表征学习已经提出了很多的思路。一种常见的工作流程是：在一个或多个使用无标签图像的pretext 任务上训练模型，然后使用该模型的一个中间特征层，为 ImageNet 分类任务的多分类 Logistic 回归分类器提供输入。</p>
+<ol>
+<li>变形:<br>
+我们期望图像上的细微变形不会改变其原始语义或几何形式。我们可以认为轻微变形后的图像与原始图像相同，因此期望学习到的特征对于变形操作具有不变性。</li>
+<li>图块:<br>
+第二类自监督学习任务从一张图像中抽取出多个图块，并要求模型预测出这些图块之间的关系。将 pretext 任务形式化定义为预测同一张图像中随机两个图块之间的相对位置。为了识别出不同部分之间的相对位置，模型需要理解目标的空间环境。</li>
+<li>着色:<br>
+着色可以被用作一个强大的自监督任务：训练模型对灰度输入图像进行着色；确切地说，我们的任务是将该图像映射到量化的色彩值输出的分布上。</li>
+<li>生成式建模:<br>
+生成式建模的 pretext 任务是在学习有意义的潜在表征的同时重建原始输入。<br>
+去噪自动编码器（详见 Vincent 等人于 2018 年发表的「Extracting and Composing Robust Features with Denoising Autoencoders」，论文链接：）会学习根据部分损坏或带有随机噪声的图像恢复出原图像。这一设计的灵感源于这样一个事实：即使有噪声，人类也可以轻松地识别出图片中的对象，这表明算法可以提取关键的视觉特征，并将其与噪声分离。详情请参阅此博文：。</li>
+</ol>
+<p>我们训练上下文编码器（详见 Pathak 等人于 2016 年发表的论文「Context Encoders: Feature Learning by Inpainting」，论文链接：）来填补图像中确实的一块。令 M^ 为一个二值掩膜，其值为 0 代表丢弃该像素，其值为 1 代表保留输入像素。我们使用一个 L2 重建损失和对抗性损失的组合来训练该模型。通过掩膜定义的删除区域的形状是任意的</p>
+<h2 id="对比自监督学习">对比自监督学习</h2>
+<p>(引用：<a href="https://www.cnblogs.com/gaopursuit/p/12242946.html" target="_blank" rel="noopener">https://www.cnblogs.com/gaopursuit/p/12242946.html</a>)</p>
+<ol>
+<li>
+<p>对比方法（Contrastive methods）通过正面和负面的例子来学习表征。尽管不是全新的思路，对比方法通过无监督的对比预训练（Unsupervised contrastive pre-training）在计算机视觉任务中取得了巨大的成功。<br>
+和传统的 Generative model 不同，传统方法专注于像素空间的特征，会存在如下不足：</p>
+<p>a. 使用像素级loss可能导致此类方法过于关注基于像素的细节，而不是抽象的语义信息。<br>
+b. 在于像素分析的方法难以有效的建立空间关联及对象的复杂结构。</p>
+</li>
+<li>
+<p>对比模型是如何工作的:<br>
+对于数据x，对比主法目标是学习一个f：</p>
+</li>
+</ol>
+<p><img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B//%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%EF%BC%881%EF%BC%89p1_1.png" alt="自监督学习（1）p1"></p>
+<p>这里x+指的是与x 相似的数据（正样本），x−指的是与x 不相似的数据（负样本）。score 函数是一个度量函数，评价两个特征间的相似性。</p>
+<p>x通常称为“anchor” 数据。为了解决这个问题，我们可以构建一个softmax分类器。类似的，对于N-way softmax 分类器，我们构建一个交叉熵损失，一般被称为InfoNCE 损失。为了最小化InfoNCE损失，可参考Poole的文章。</p>
+<h2 id="自监督学习的相关链接">自监督学习的相关链接</h2>
+<p><a href="https://www.qbitai.com/2020/01/11021.html" target="_blank" rel="noopener">https://www.qbitai.com/2020/01/11021.html</a></p>
+<h2 id="杂笔">杂笔：</h2>
+<p>论文地址：<a href="https://arxiv.org/pdf/1902.06162.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1902.06162.pdf</a><br>
+由于多级视觉特征的广泛应用价值，深度神经网络已经在许多计算机视觉任务中，作为一种基础结构而存在，例如目标检测、语义分割、图像描述等。从大规模数据集（如ImageNet等）中训练得出的模型，被广泛的作为预训练模型使用，进而根据特定任务，进行模型fine-tuned。导致这一现象的原因有两个：1、从大规模数据集中获取的参数是为模型提供了一个非常高质量的起始点，因而，网络可以更快的收敛；2、网络已经从大规模数据集上学习到了层次特征，特别是当特定任务数据集过小，或者是训练标签缺乏的情况下，可以有效减少其他任务训练过程中的过拟合问题。<br>
+<strong>深度卷积神经网络的性能依赖于学习能力与训练数据，因为越来越多的网络架构（如AlexNet、VGG、GoogleNet、ResNet与DenseNet）与训练数据集（如ImageNet、OpenImage等）被开发出来</strong>。随之而来的是卷积网络性能的大幅度提升。==但是，数据集的收集与标注是非常耗时且昂贵的==<br>
+<strong>许多自监督方法被提出来，以避免耗时耗力的数据标注过程</strong>。为了从无标签数据中学习视觉特征，一中流行的方案是根据网络要解决的多种pretext任务，并通过训练pretext任务的过程，来学习各类特征。如colorizing grayscale images，image inpainting，image jigsaw puzzle等。pretext任务共享了2个通用特点：<strong>1、图像与视频特征通过卷积神经网络捕获特征，以解决pretext任务；2、在这一过程中，会自动生成图像或视频的伪标签。</strong></p>
 
                 
 
@@ -225,12 +274,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/article/自监督学习/" data-toggle="tooltip" data-placement="top" title="自监督学习">&larr; Previous Post</a>
+                            <a href="/article/python随机种子 /" data-toggle="tooltip" data-placement="top" title="python随机种子">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/article/python之图片处理/" data-toggle="tooltip" data-placement="top" title="python之图片处理">Next Post &rarr;</a>
+                            <a href="/article/GoogleNet-Iception副本/" data-toggle="tooltip" data-placement="top" title="GoogleNet-Iception">Next Post &rarr;</a>
                         </li>
                     
                 </ul>

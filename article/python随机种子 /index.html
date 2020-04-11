@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          GoogleNet-Iception - never-ceasingwave | Blog
+          python随机种子 - never-ceasingwave | Blog
         
     </title>
 
-    <link rel="canonical" href="http://fangjuntao.github.io/article/GoogleNet-Iception副本/">
+    <link rel="canonical" href="http://fangjuntao.github.io/article/python随机种子 /">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,10 +88,10 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
+                              <a class="tag" href="/tags/#python,技术，转载" title="python,技术，转载">python,技术，转载</a>
                             
                         </div>
-                        <h1>GoogleNet-Iception</h1>
+                        <h1>python随机种子</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by never-ceasing wave on
@@ -212,25 +212,28 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <ol>
-<li>文档：GoogleNet-Iception</li>
-<li>==作者：方俊涛==</li>
-<li>链接：<a href="http://note.youdao.com/noteshare?id=2f934ffc28f1d5746ad61c514cad3510&amp;sub=E504FB8E7AB7446AA13895431D79824C" target="_blank" rel="noopener">http://note.youdao.com/noteshare?id=2f934ffc28f1d5746ad61c514cad3510&amp;sub=E504FB8E7AB7446AA13895431D79824C</a></li>
-</ol>
-
+                <p>原文链接<br>
+<a href="https://blog.csdn.net/weixin_41013470/article/details/82956178?utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/weixin_41013470/article/details/82956178?utm_source=distribute.pc_relevant.none-task</a></p>
+<p><img src="/img/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/2020.2.21python%E4%B9%8B%E9%9A%8F%E6%9C%BA%E7%A7%8D%E5%AD%90.png" alt="2020.2.21pythob之随机种子"></p>
+<p>random随机数是这样生成的：我们将这套复杂的算法（是叫随机数生成器吧）看成一个黑盒，把我们准备好的种子扔进去，它会返给你两个东西，一个是你想要的随机数，另一个是保证能生成下一个随机数的新的种子，把新的种子放进黑盒，又得到一个新的随机数和一个新的种子，从此在生成随机数的路上越走越远。</p>
+<p>好了，回头看看我们的代码：</p>
+<p>第一段代码把对种子的设置放在了循环里面，每次执行循环都旗帜鲜明地告诉黑盒：“我的种子是2”。那么很显然：同一个黑盒，同一个种子，自然得到的是同一个随机数。</p>
+<p>第二段代码把对种子的设置放在了循环外面，他只在第一次循环的时候明确地告诉黑盒：“我的种子是2”。那么也很显然：从第二次循环开始，黑盒用的就是自己生成的新种子了。</p>
+<p>多说一句：因为黑盒是始终如一的，所以只要你没改变种子，那么你得到的随机数就不会改变。</p>
+<p>没有特殊需求的话，还是老老实实地用Python自动选择的种子吧，省心又省力。</p>
+<p><strong>补充:</strong><br>
+随机数是序列，这个序列根据算法计算而来。这个算法有参数，给定一个参数就会产生相应的序列，不同的参数产生不同的序列。不指定随机种子时，将按照一个序列(即默认的某一个参数)依次往下生成随机数，所以每次调用random()都生成不同的随机数。当指定随机数种子时，随机种子的参数确定相应的序列(不指定参数的话还是默认序列)，在这个种子作用范围内，调用random()将按照这个序列生成随机数。再次启动程序，即再次进入这个种子时，还按照这个序列从头开始生成随机数</p>
+<p>源代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">num=0</span><br><span class="line">while(num&lt;5):</span><br><span class="line">    np.random.seed(1)</span><br><span class="line">    print(np.random.random())</span><br><span class="line">    num+=1</span><br><span class="line"> </span><br><span class="line">print(&apos;-------------------------&apos;)</span><br><span class="line"> </span><br><span class="line">num1=0</span><br><span class="line">np.random.seed(2)</span><br><span class="line">while(num1&lt;5):</span><br><span class="line">    print(np.random.random())</span><br><span class="line">    num1+=1</span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/article/自监督学习/" data-toggle="tooltip" data-placement="top" title="自监督学习">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/article/python之图片处理/" data-toggle="tooltip" data-placement="top" title="python之图片处理">Next Post &rarr;</a>
+                            <a href="/article/自监督学习/" data-toggle="tooltip" data-placement="top" title="自监督学习">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -288,7 +291,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
+                          <a class="tag" href="/tags/#python,技术，转载" title="python,技术，转载">python,技术，转载</a>
                         
                     </div>
                 </section>
