@@ -149,14 +149,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -213,14 +213,14 @@
                 post-container">
 
                 <h2 id="自监督学习简介">自监督学习简介</h2>
-<p>(转载 <a href="https://zhuanlan.zhihu.com/p/66063089" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089</a>)</p>
+<p>(参考 <a href="https://zhuanlan.zhihu.com/p/66063089" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089</a>)</p>
 <ol>
 <li>自监督学习的核心，在于<strong>如何自动为数据产生标签</strong>。例如输入一张图片，把图片随机旋转一个角度，然后把旋转后的图片作为输入，随机旋转的角度作为标签。再例如，把输入的图片均匀分割成3X3的格子，每个格子里面的内容作为一个patch，随机打乱patch的排列顺序，然后用打乱顺序的patch作为输入，正确的排列顺序作为label。类似这种自动产生的标注，完全无需人工参与</li>
 <li>自监督学习如何评价性能？<strong>自监督学习性能的高低，主要通过模型学出来的feature的质量来评价。feature质量的高低，主要是通过迁移学习的方式，把feature用到其它视觉任务中</strong>（分类、分割、物体检测…），然后通过视觉任务的结果的好坏来评价。目前没有统一的、标准的评价方式。</li>
 <li>自监督学习的一个研究套路。<strong>前面说到，自监督学习的核心是如何给输入数据自动生成标签</strong>。之前的很多工作都是围绕这个核心展开的。<strong>一般的套路是：首先提出一个新的自动打标签的辅助任务（pretext task，例如：旋转图片、打乱patch顺序），用辅助任务自动生成标签，然后做实验、测性能、发文章</strong>。每年都有新的辅助任务被提出来，自监督学习的性能也在不断提高，有的甚至已经接近监督学习的性能。总体上说，或者是提出一种完全新的辅助任务，或者是把多个旧的辅助任务组合到一起作为一个“新”的辅助任务。</li>
 </ol>
 <h2 id="从扩展性的角度看自监督学习的发展">从扩展性的角度看自监督学习的发展</h2>
-<p>（转载： <a href="https://zhuanlan.zhihu.com/p/66063089%EF%BC%89" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089）</a><br>
+<p>（参考： <a href="https://zhuanlan.zhihu.com/p/66063089%EF%BC%89" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/66063089）</a><br>
 从扩展性（scalability）的角度看，需要搞清楚自监督学习和以下三方面的关系：</p>
 <ol>
 <li><strong>扩展数据集</strong>。主要研究的问题是：训练自监督学习模型的数据集的大小，跟性能是否有某种关系？能否通过增大数据集来提升性能？</li>
