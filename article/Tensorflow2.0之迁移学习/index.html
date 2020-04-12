@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          方俊涛 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://fangjuntao.github.io/article/Tensorflow2.0之迁移学习/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1></h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Fangjuntao on
+                            2020-04-12
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">方俊涛</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="简介">简介</h1>
+<p>（参考：百度百科）</p>
+<h2 id="简单介绍">简单介绍</h2>
+<p>迁移学习是一种机器学习方法，就是把为任务 A 开发的模型作为初始点，重新使用在为任务 B 开发模型的过程中。深度学习中在计算机视觉任务和自然语言处理任务中将预训练的模型作为新模型的起点是一种常用的方法，通常这些预训练的模型在开发神经网络的时候已经消耗了巨大的时间资源和计算资源，迁移学习可以将已习得的强大技能迁移到相关的的问题上。</p>
+<h2 id="为什么需要迁移学习">为什么需要迁移学习</h2>
+<p>（参考：mantch大佬http://blog.itpub.net/69942346/viewspace-2654034/）</p>
+<ol>
+<li>大数据与少标注的矛盾：虽然有大量的数据，但往往都是没有标注的，无法训练机器学习模型。人工进行数据标定太耗时。</li>
+<li>大数据与弱计算的矛盾：普通人无法拥有庞大的数据量与计算资源。因此需要借助于模型的迁移。</li>
+<li>普适化模型与个性化需求的矛盾：即使是在同一个任务上，一个模型也往往难以满足每个人的个性化需求，比如特定的隐私设置。这就需要在不同人之间做模型的适配。</li>
+<li>特定应用（如冷启动）的需求。</li>
+</ol>
+<h2 id="方法">方法</h2>
+<h3 id="开发模型的方法">开发模型的方法：</h3>
+<ol>
+<li>选择源任务。你必须选择一个具有丰富数据的相关的预测建模问题，原任务和目标任务的输入数据、输出数据以及从输入数据和输出数据之间的映射中学到的概念之间有某种关系，</li>
+<li>开发源模型。然后，你必须为第一个任务开发一个精巧的模型。这个模型一定要比普通的模型更好，以保证一些特征学习可以被执行。</li>
+<li>重用模型。然后，适用于源任务的模型可以被作为目标任务的学习起点。这可能将会涉及到全部或者部分使用第一个模型，这依赖于所用的建模技术。</li>
+<li>调整模型。模型可以在目标数据集中的输入-输出对上选择性地进行微调，以让它适应目标任务。</li>
+</ol>
+<h3 id="预训练模型方法">预训练模型方法</h3>
+<ol>
+<li>选择源模型。一个预训练的源模型是从可用模型中挑选出来的。很多研究机构都发布了基于超大数据集的模型，这些都可以作为源模型的备选者。</li>
+<li>重用模型。选择的预训练模型可以作为用于第二个任务的模型的学习起点。这可能涉及到全部或者部分使用与训练模型，取决于所用的模型训练技术。</li>
+<li>调整模型。模型可以在目标数据集中的输入-输出对上选择性地进行微调，以让它适应目标任务。</li>
+</ol>
+<p><strong>第二种类型的迁移学习在深度学习领域比较常用</strong>。</p>
+<h1 id="基于tensorflow20实战">基于Tensorflow2.0实战</h1>
+<p>（参考：<a href="https://blog.csdn.net/weixin_45906054/article/details/103535499" target="_blank" rel="noopener">https://blog.csdn.net/weixin_45906054/article/details/103535499</a> ）</p>
+<h2 id="前言">前言</h2>
+<ol>
+<li>数据集：“Cats vs Dogs”的 数据集。这个数据集包含了 23,262 张猫和狗的图像。<br>
+（可以在 Tensorflow Datasets 中获取这个数据集）</li>
+<li>预训练模型：在 ImageNet 数据集上训练得到的模型。这些模型可以在 tensorflow.keras.applications 模块里找到</li>
+<li>个人环境：</li>
+</ol>
+<ul>
+<li>python3.5</li>
+<li>tensorflow2.0</li>
+<li>pycharm community</li>
+</ul>
+<ol start="4">
+<li>安装：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install tensorflow-datasets</span><br></pre></td></tr></table></figure>
+<h2 id="实现">实现</h2>
+<ol start="0">
+<li>
+<p>思路：这个实现分成了几个 部分。首先，我们实现了一个类，其负责 <strong>载入 数据和准备数据</strong>。然后，我们 导入 预训练模型，构建一个 <strong>类， 用于修改最顶端的几层网络</strong>。最后，我们把 <strong>训练</strong> 过程运行起来，并进行 <strong>评估</strong>。<br>
+当然，在这之前，我们必须导入一些代码库，定义一些全局常量</p>
+</li>
+<li>
+<p>导入库，定义相关常量：</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"> </span><br><span class="line">import tensorflow as tf</span><br><span class="line">import tensorflow_datasets as tfds</span><br><span class="line"> </span><br><span class="line">IMG_SIZE = 160</span><br><span class="line">BATCH_SIZE = 32</span><br><span class="line">SHUFFLE_SIZE = 1000</span><br><span class="line">IMG_SHAPE = (IMG_SIZE, IMG_SIZE, 3)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>实现一个类：<strong>数据载入器</strong></li>
+</ol>
+<ul>
+<li>这个类负责载入数据和准备数据，用于后续的数据处理。</li>
+<li>代码：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">#数据载入器</span><br><span class="line">#这个类负责载入数据和 准备 数据，用于后续的数据处理。</span><br><span class="line">class DataLoader(object):</span><br><span class="line">    def __init__(self, image_size, batch_size):</span><br><span class="line"></span><br><span class="line">        self.image_size = image_size</span><br><span class="line">        self.batch_size = batch_size</span><br><span class="line"></span><br><span class="line">        # 80% train data, 10% validation data, 10% test data</span><br><span class="line"></span><br><span class="line">        (self.train_data_raw, self.validation_data_raw, self.test_data_raw), self.metadata = tfds.load(</span><br><span class="line">            &apos;cats_vs_dogs&apos;, split=[&apos;train[:80%]&apos;, &apos;train[80%:90%]&apos;, &apos;train[90%:]&apos;],</span><br><span class="line">            with_info=True,</span><br><span class="line">            as_supervised=True, )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        # Get the number of train examples</span><br><span class="line">        self.num_train_examples = self.metadata.splits[&apos;train&apos;].num_examples*80/100</span><br><span class="line">        self.get_label_name = self.metadata.features[&apos;label&apos;].int2str</span><br><span class="line"></span><br><span class="line">        # Pre-process data</span><br><span class="line">        self._prepare_data()</span><br><span class="line">        self._prepare_batches()</span><br><span class="line"></span><br><span class="line">    # Resize all images to image_size x image_size</span><br><span class="line">    #内部方法，用于缩放和归一化数据集里的图像。构造函数需要用到该函数。</span><br><span class="line">    def _prepare_data(self):</span><br><span class="line">        self.train_data = self.train_data_raw.map(self._resize_sample)</span><br><span class="line">        self.validation_data = self.validation_data_raw.map(self._resize_sample)</span><br><span class="line">        self.test_data = self.test_data_raw.map(self._resize_sample)</span><br><span class="line"></span><br><span class="line">    # Resize one image to image_size x image_size</span><br><span class="line">    #内部方法，用于缩放单张图像。</span><br><span class="line">    def _resize_sample(self, image, label):</span><br><span class="line">        image = tf.cast(image, tf.float32)</span><br><span class="line">        image = (image/127.5) - 1</span><br><span class="line">        image = tf.image.resize(image, (self.image_size, self.image_size))</span><br><span class="line">        return image, label</span><br><span class="line"></span><br><span class="line">#内部方法，用于将图像打包创建为 batches。创建 train_batches、validation_batches 和 test_batches，分别用于训练、评估过程。</span><br><span class="line">    def _prepare_batches(self):</span><br><span class="line">        self.train_batches = self.train_data.shuffle(1000).batch(self.batch_size)</span><br><span class="line">        self.validation_batches = self.validation_data.batch(self.batch_size)</span><br><span class="line">        self.test_batches = self.test_data.batch(self.batch_size)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # Get defined number of  not processed images</span><br><span class="line">    #这个方法用于从原始的、没有经过处理的数据中随机获取固定数量的图像。</span><br><span class="line">    def get_random_raw_images(self, num_of_images):</span><br><span class="line">        random_train_raw_data = self.train_data_raw.shuffle(1000)</span><br><span class="line">        return random_train_raw_data.take(num_of_images)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>分析：看 __ init__</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">首先我们通过传入参数 定义 了图像大小和 batch 大小。然后，由于该数据集本身没有区分训练集和测试集，我们通过划分权值对数据进行划分。这真是 Tensorflow Dataset 引入的非常棒的功能，因为我们可以 留在Tensorflow生态系统 中做这件事，我们不用引入其他的库（比如 Pandas 或者 Scikit Learn）。一旦我们执行了数据划分，我们就开始 计算 训练样本数量，然后调用辅助函数来为训练 准备 数据。在这之后，我们需要做的仅仅是实例化这个类的 对象， 然后载入数据即可。</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>实例化这个类的对象,并显示图片进行查看</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">data_loader = DataLoader(IMG_SIZE, BATCH_SIZE)</span><br><span class="line">plt.figure(figsize=(10, 8))</span><br><span class="line">i = 0</span><br><span class="line">for img, label in data_loader.get_random_raw_images(20):</span><br><span class="line">    plt.subplot(4, 5, i+1)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line">    plt.title(&quot;&#123;&#125; - &#123;&#125;&quot;.format(data_loader.get_label_name(label), img.shape))</span><br><span class="line">    plt.xticks([])</span><br><span class="line">    plt.yticks([])</span><br><span class="line">    i += 1</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>以下是输出结果：<br>
+<img src="/img/article/Tensorflow2.0%E4%B9%8B%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/2020.4.12-1.jpg" alt="输出结果"></p>
+<ol start="4">
+<li>载入 <strong>预训练模型</strong></li>
+</ol>
+<ul>
+<li>这些模型位于 tensorflow.kearas.applications。我们可以用下面的语句直接载入它们：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vgg16_base = tf.keras.applications.VGG16(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br><span class="line">googlenet_base = tf.keras.applications.InceptionV3(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br><span class="line">resnet_base = tf.keras.applications.ResNet101V2(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这段代码就是我们创建上述三种网络结构 <strong>基础模型</strong> 的方式。注意，每个模型构造函数的 include_top参数 传入的是 <strong>false</strong>。这意味着这些模型是用于 <strong>提取特征</strong> 的,这些层的参数冻结。我们一旦创建了这些模型，我们就需要修改这些模型 顶部的网络层，使之适用于我们的具体 问题。我们使用 Wrapper 类来完成这个步骤。这个类接收 <strong>预训练模型</strong>，然后添加一个 Global Average Polling Layer 和一个 Dense Layer。本质上，这最后的 Dense Layer 会用于我们的二分类问题（猫或狗）。Wrapper 类把所有这些元素都放到了一起，放在了同一个 <strong>模型</strong> 中</li>
+</ul>
+<ol start="5">
+<li>Wrapper类：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Wrapper(tf.keras.Model):</span><br><span class="line">    def __init__(self, base_model):</span><br><span class="line">        super(Wrapper, self).__init__()</span><br><span class="line"> </span><br><span class="line">        self.base_model = base_model</span><br><span class="line">        self.average_pooling_layer = tf.keras.layers.GlobalAveragePooling2D()</span><br><span class="line">        self.output_layer = tf.keras.layers.Dense(1)</span><br><span class="line"> </span><br><span class="line">    def call(self, inputs):</span><br><span class="line">        x = self.base_model(inputs)</span><br><span class="line">        x = self.average_pooling_layer(x)</span><br><span class="line">        output = self.output_layer(x)</span><br><span class="line">        return output</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>最后：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">base_learning_rate = 0.0001</span><br><span class="line"> </span><br><span class="line">vgg16_base.trainable = False</span><br><span class="line">vgg16 = Wrapper(vgg16_base)</span><br><span class="line">vgg16.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">              loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">              metrics=[&apos;accuracy&apos;])</span><br><span class="line"> </span><br><span class="line">googlenet_base.trainable = False</span><br><span class="line">googlenet = Wrapper(googlenet_base)</span><br><span class="line">googlenet.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">              loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">              metrics=[&apos;accuracy&apos;])</span><br><span class="line"> </span><br><span class="line">resnet_base.trainable = False</span><br><span class="line">resnet = Wrapper(resnet_base)</span><br><span class="line">resnet.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">              loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">              metrics=[&apos;accuracy&apos;])</span><br></pre></td></tr></table></figure>
+<p><strong>PS：</strong> 我们标记了基础模型是 不参与训练的，这意味着在训练过程中，我们只会训练新添加到顶部的网络层，而在网络底部的权重值不会发生变化。</p>
+<ol start="7">
+<li>在开始完整训练前进行实验：这些模型的大部头其实已经 被训练过 了。所以，我们可以执行评估过程来看看评估结果如何：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">steps_per_epoch = round(data_loader.num_train_examples)//BATCH_SIZE</span><br><span class="line">validation_steps = 20</span><br><span class="line"> </span><br><span class="line">loss1, accuracy1 = vgg16.evaluate(data_loader.validation_batches, steps = 20)</span><br><span class="line">loss2, accuracy2 = googlenet.evaluate(data_loader.validation_batches, steps = 20)</span><br><span class="line">loss3, accuracy3 = resnet.evaluate(data_loader.validation_batches, steps = 20)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------VGG16---------&quot;)</span><br><span class="line">print(&quot;Initial loss: &#123;:.2f&#125;&quot;.format(loss1))</span><br><span class="line">print(&quot;Initial accuracy: &#123;:.2f&#125;&quot;.format(accuracy1))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------GoogLeNet---------&quot;)</span><br><span class="line">print(&quot;Initial loss: &#123;:.2f&#125;&quot;.format(loss2))</span><br><span class="line">print(&quot;Initial accuracy: &#123;:.2f&#125;&quot;.format(accuracy2))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------ResNet---------&quot;)</span><br><span class="line">print(&quot;Initial loss: &#123;:.2f&#125;&quot;.format(loss3))</span><br><span class="line">print(&quot;Initial accuracy: &#123;:.2f&#125;&quot;.format(accuracy3))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br></pre></td></tr></table></figure>
+<p><strong>有意思的是，这些模型在没有预先 训练 的情况下，我们得到的结果也还过得去（50% 的精确度）：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">———VGG16———</span><br><span class="line">Initial loss: 5.30</span><br><span class="line">Initial accuracy: 0.51</span><br><span class="line">—————————-</span><br><span class="line"> </span><br><span class="line">——GoogLeNet—–</span><br><span class="line">Initial loss: 7.21</span><br><span class="line">Initial accuracy: 0.51</span><br><span class="line">—————————-</span><br><span class="line"> </span><br><span class="line">——–ResNet———</span><br><span class="line">Initial loss: 6.01</span><br><span class="line">Initial accuracy: 0.51</span><br><span class="line">—————————-</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>开始训练：</li>
+</ol>
+<ul>
+<li>vgg16</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">history = vgg16.fit(data_loader.train_batches,</span><br><span class="line">                    epochs=10,</span><br><span class="line">                    validation_data=data_loader.validation_batches)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>googlenet</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">history = googlenet.fit(data_loader.train_batches,</span><br><span class="line">                    epochs=10,</span><br><span class="line">                    validation_data=data_loader.validation_batches)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>resnet</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">history = resnet.fit(data_loader.train_batches,</span><br><span class="line">                    epochs=10,</span><br><span class="line">                    validation_data=data_loader.validation_batches)</span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>评估：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">loss1, accuracy1 = vgg16.evaluate(data_loader.test_batches, steps = 20)</span><br><span class="line">loss2, accuracy2 = googlenet.evaluate(data_loader.test_batches, steps = 20)</span><br><span class="line">loss3, accuracy3 = resnet.evaluate(data_loader.test_batches, steps = 20)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------VGG16---------&quot;)</span><br><span class="line">print(&quot;Loss: &#123;:.2f&#125;&quot;.format(loss1))</span><br><span class="line">print(&quot;Accuracy: &#123;:.2f&#125;&quot;.format(accuracy1))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------GoogLeNet---------&quot;)</span><br><span class="line">print(&quot;Loss: &#123;:.2f&#125;&quot;.format(loss2))</span><br><span class="line">print(&quot;Accuracy: &#123;:.2f&#125;&quot;.format(accuracy2))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br><span class="line"> </span><br><span class="line">print(&quot;--------ResNet---------&quot;)</span><br><span class="line">print(&quot;Loss: &#123;:.2f&#125;&quot;.format(loss3))</span><br><span class="line">print(&quot;Accuracy: &#123;:.2f&#125;&quot;.format(accuracy3))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">——–VGG16———</span><br><span class="line">Loss: 0.25</span><br><span class="line">Accuracy: 0.93</span><br><span class="line">—————————</span><br><span class="line"> </span><br><span class="line">——–GoogLeNet———</span><br><span class="line">Loss: 0.54</span><br><span class="line">Accuracy: 0.95</span><br><span class="line">—————————</span><br><span class="line">——–ResNet———</span><br><span class="line">Loss: 0.40</span><br><span class="line">Accuracy: 0.97</span><br><span class="line">—————————</span><br></pre></td></tr></table></figure>
+<ol start="10">
+<li>完整源代码：<br>
+++PS:由于时间关系，最终只下载了VGG16的参数，所以只实现了VGG16网络的迁移学习，若想迁移其它网络，同理++</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br></pre></td><td class="code"><pre><span class="line">import numpy as np</span><br><span class="line">import matplotlib.pyplot as plt</span><br><span class="line"></span><br><span class="line">import tensorflow as tf</span><br><span class="line">import tensorflow_datasets as tfds</span><br><span class="line"></span><br><span class="line">IMG_SIZE = 160</span><br><span class="line">BATCH_SIZE = 32</span><br><span class="line">SHUFFLE_SIZE = 1000</span><br><span class="line">IMG_SHAPE = (IMG_SIZE, IMG_SIZE, 3)</span><br><span class="line"></span><br><span class="line">#数据载入器</span><br><span class="line">#这个类负责载入数据和 准备 数据，用于后续的数据处理。</span><br><span class="line">class DataLoader(object):</span><br><span class="line">    def __init__(self, image_size, batch_size):</span><br><span class="line"></span><br><span class="line">        self.image_size = image_size</span><br><span class="line">        self.batch_size = batch_size</span><br><span class="line"></span><br><span class="line">        # 80% train data, 10% validation data, 10% test data</span><br><span class="line"></span><br><span class="line">        (self.train_data_raw, self.validation_data_raw, self.test_data_raw), self.metadata = tfds.load(</span><br><span class="line">            &apos;cats_vs_dogs&apos;, split=[&apos;train[:80%]&apos;, &apos;train[80%:90%]&apos;, &apos;train[90%:]&apos;],</span><br><span class="line">            with_info=True,</span><br><span class="line">            as_supervised=True, )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        # Get the number of train examples</span><br><span class="line">        self.num_train_examples = self.metadata.splits[&apos;train&apos;].num_examples*80/100</span><br><span class="line">        self.get_label_name = self.metadata.features[&apos;label&apos;].int2str</span><br><span class="line"></span><br><span class="line">        # Pre-process data</span><br><span class="line">        self._prepare_data()</span><br><span class="line">        self._prepare_batches()</span><br><span class="line"></span><br><span class="line">    # Resize all images to image_size x image_size</span><br><span class="line">    #内部方法，用于缩放和归一化数据集里的图像。构造函数需要用到该函数。</span><br><span class="line">    def _prepare_data(self):</span><br><span class="line">        self.train_data = self.train_data_raw.map(self._resize_sample)</span><br><span class="line">        self.validation_data = self.validation_data_raw.map(self._resize_sample)</span><br><span class="line">        self.test_data = self.test_data_raw.map(self._resize_sample)</span><br><span class="line"></span><br><span class="line">    # Resize one image to image_size x image_size</span><br><span class="line">    #内部方法，用于缩放单张图像。</span><br><span class="line">    def _resize_sample(self, image, label):</span><br><span class="line">        image = tf.cast(image, tf.float32)</span><br><span class="line">        image = (image/127.5) - 1</span><br><span class="line">        image = tf.image.resize(image, (self.image_size, self.image_size))</span><br><span class="line">        return image, label</span><br><span class="line"></span><br><span class="line">#内部方法，用于将图像打包创建为 batches。创建 train_batches、validation_batches 和 test_batches，分别用于训练、评估过程。</span><br><span class="line">    def _prepare_batches(self):</span><br><span class="line">        self.train_batches = self.train_data.shuffle(1000).batch(self.batch_size)</span><br><span class="line">        self.validation_batches = self.validation_data.batch(self.batch_size)</span><br><span class="line">        self.test_batches = self.test_data.batch(self.batch_size)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    # Get defined number of  not processed images</span><br><span class="line">    #这个方法用于从原始的、没有经过处理的数据中随机获取固定数量的图像。</span><br><span class="line">    def get_random_raw_images(self, num_of_images):</span><br><span class="line">        random_train_raw_data = self.train_data_raw.shuffle(1000)</span><br><span class="line">        return random_train_raw_data.take(num_of_images)</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">data_loader = DataLoader(IMG_SIZE, BATCH_SIZE)</span><br><span class="line">plt.figure(figsize=(10, 8))</span><br><span class="line">i = 0</span><br><span class="line">for img, label in data_loader.get_random_raw_images(20):</span><br><span class="line">    plt.subplot(4, 5, i+1)</span><br><span class="line">    plt.imshow(img)</span><br><span class="line">    plt.title(&quot;&#123;&#125; - &#123;&#125;&quot;.format(data_loader.get_label_name(label), img.shape))</span><br><span class="line">    plt.xticks([])</span><br><span class="line">    plt.yticks([])</span><br><span class="line">    i += 1</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line">#载入 预训练模型 了，这些模型位于 tensorflow.kearas.applications</span><br><span class="line">vgg16_base = tf.keras.applications.VGG16(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br><span class="line">vgg16_base.summary()</span><br><span class="line">#googlenet_base = tf.keras.applications.InceptionV3(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br><span class="line">#resnet_base = tf.keras.applications.ResNet101V2(input_shape=IMG_SHAPE, include_top=False, weights=&apos;imagenet&apos;)</span><br><span class="line"></span><br><span class="line">#顶部的网络层，</span><br><span class="line">class Wrapper(tf.keras.Model):</span><br><span class="line">    def __init__(self, base_model):</span><br><span class="line">        super(Wrapper, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.base_model = base_model</span><br><span class="line">        self.average_pooling_layer = tf.keras.layers.GlobalAveragePooling2D()</span><br><span class="line">        self.output_layer = tf.keras.layers.Dense(1)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs):</span><br><span class="line">        x = self.base_model(inputs)</span><br><span class="line">        x = self.average_pooling_layer(x)</span><br><span class="line">        output = self.output_layer(x)</span><br><span class="line">        return output</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">base_learning_rate = 0.0001</span><br><span class="line"></span><br><span class="line">vgg16_base.trainable = False</span><br><span class="line">vgg16 = Wrapper(vgg16_base)</span><br><span class="line">vgg16.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">              loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">              metrics=[&apos;accuracy&apos;])</span><br><span class="line"></span><br><span class="line"># googlenet_base.trainable = False</span><br><span class="line"># googlenet = Wrapper(googlenet_base)</span><br><span class="line"># googlenet.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">#                   loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">#                   metrics=[&apos;accuracy&apos;])</span><br><span class="line"></span><br><span class="line"># resnet_base.trainable = False</span><br><span class="line"># resnet = Wrapper(resnet_base)</span><br><span class="line"># resnet.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),</span><br><span class="line">#                loss=&apos;binary_crossentropy&apos;,</span><br><span class="line">#                metrics=[&apos;accuracy&apos;])</span><br><span class="line">steps_per_epoch = round(data_loader.num_train_examples) // BATCH_SIZE</span><br><span class="line">validation_steps = 20</span><br><span class="line"></span><br><span class="line">loss1, accuracy1 = vgg16.evaluate(data_loader.validation_batches, steps=20)</span><br><span class="line">#loss2, accuracy2 = googlenet.evaluate(data_loader.validation_batches, steps=20)</span><br><span class="line">#loss3, accuracy3 = resnet.evaluate(data_loader.validation_batches, steps=20)</span><br><span class="line"></span><br><span class="line">print(&quot;--------VGG16---------&quot;)</span><br><span class="line">print(&quot;Initial loss: &#123;:.2f&#125;&quot;.format(loss1))</span><br><span class="line">print(&quot;Initial accuracy: &#123;:.2f&#125;&quot;.format(accuracy1))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br><span class="line"></span><br><span class="line">history = vgg16.fit(data_loader.train_batches,</span><br><span class="line">                    epochs=10,</span><br><span class="line">                    validation_data=data_loader.validation_batches)</span><br><span class="line">loss1, accuracy1 = vgg16.evaluate(data_loader.test_batches, steps = 20)</span><br><span class="line">print(&quot;--------VGG16---------&quot;)</span><br><span class="line">print(&quot;Loss: &#123;:.2f&#125;&quot;.format(loss1))</span><br><span class="line">print(&quot;Accuracy: &#123;:.2f&#125;&quot;.format(accuracy1))</span><br><span class="line">print(&quot;---------------------------&quot;)</span><br></pre></td></tr></table></figure>
+<h2 id="错误记录">错误记录：</h2>
+<h3 id="由于网络原因下载预训练网络权重失败">由于网络原因下载预训练网络权重失败：</h3>
+<ol>
+<li>
+<p><img src="/img/article/Tensorflow2.0%E4%B9%8B%E8%BF%81%E7%A7%BB%E5%AD%A6%E4%B9%A0/2020.4.12-2.jpg" alt="图片"></p>
+</li>
+<li>
+<p>解决方案：<br>
+参考：<a href="https://blog.csdn.net/icurious/article/details/80077035" target="_blank" rel="noopener">https://blog.csdn.net/icurious/article/details/80077035</a></p>
+</li>
+</ol>
+<ul>
+<li>自行前往 <a href="https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_t%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6" target="_blank" rel="noopener">https://github.com/fchollet/deep-learning-models/releases/download/v0.1/vgg16_weights_t下载文件</a></li>
+<li>加载文件：<br>
+法一：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Linux: 将下载好的*.h5文件下载到用户目录下的~/.keras/models</span><br><span class="line"></span><br><span class="line">Windows: 在电脑的地址栏中输入%userprofile%，将下载好的*.h5文件放入.keras/models文件夹下</span><br></pre></td></tr></table></figure>
+<p>法二:<br>
+为了避免c盘占用过大，使用相对路径加载也可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">path=&apos;./[权重文件存放路径]/vgg16_weights_tf_dim_ordering_tf_kernels.h5&apos;  </span><br><span class="line">vgg16 = VGG16(weights=path, include_top=True)</span><br><span class="line">vgg16.summary()</span><br></pre></td></tr></table></figure>
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/article/python随机种子 /" data-toggle="tooltip" data-placement="top" title="python随机种子">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://me.csdn.net/qq_42804626" target="_blank">CSDN Blog potterr</a></li>
+                    
+                        <li><a href="https://www.cnblogs.com/never-ceasing-wave/" target="_blank">博客园 一只有理想的程序员</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/fangjuntao/fangjuntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Fangjuntao 2020 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://fangjuntao.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://fangjuntao.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
