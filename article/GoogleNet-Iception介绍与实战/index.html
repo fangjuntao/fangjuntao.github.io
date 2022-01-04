@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          GoogleNet-Iception介绍与实战 - 方俊涛 | Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://fangjuntao.github.io/article/GoogleNet-Iception介绍与实战/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+
+    <link rel="stylesheet" href="/css/donate.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('/img/article_header/article_bg.jpg')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
+                            
+                        </div>
+                        <h1>GoogleNet-Iception介绍与实战</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Fangjuntao on
+                            2022-01-03
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">方俊涛</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>==主要参考：== <a href="https://blog.csdn.net/abc13526222160/article/details/95472241" target="_blank" rel="noopener">https://blog.csdn.net/abc13526222160/article/details/95472241</a></p>
+<p><strong>代码参考：</strong><br>
+<a href="https://github.com/calmisential/InceptionV4_TensorFlow2" target="_blank" rel="noopener">https://github.com/calmisential/InceptionV4_TensorFlow2</a></p>
+<h1 id="goolenet的简单介绍">GooleNet的简单介绍</h1>
+<h2 id="googlenet-iception-v12014介绍">GoogleNet-Iception V1(2014)介绍</h2>
+<ol>
+<li>
+<p>为什么提出Inception<br>
+提高网络最简单粗暴的方法就是提高网络的深度和宽度，即增加隐层和以及各层神经元数目。但这种简单粗暴的方法存在一些问题：</p>
+<p>① 参数太多，若训练数据集有限，容易过拟合；<br>
+② 网络越大计算复杂度越大，难以应用；<br>
+③ 网络越深，梯度越往后穿越容易消失，难以优化模型(这个时候还没有提出BN时，网络的优化极其困难)。</p>
+<p>基于此，为了提高网络计算资源的利用率，在计算量不变的情况下，提高网络的宽度和深度。论文作者认为，解决这种困难的方法就是，把全连接改成稀疏连接，卷积层也是稀疏连接，但是不对称的稀疏数据数值计算效率低下，因为硬件全是针对密集矩阵优化的，所以，我们要找到卷积网络可以近似的最优局部稀疏结构，并且该结构下可以用现有的密度矩阵计算硬件实现，产生的结果就是Inception。</p>
+</li>
+<li>
+<p>Inception模块介绍<br>
+<img src="60CA9C8141D94B30B1112612C4D16A7A" alt="image"><br>
+其中b是对a的改进，用1×1的卷积核进行降维：</p>
+</li>
+</ol>
+<ul>
+<li>① 降低维度(通道数)，减少计算瓶颈。</li>
+<li>② 增加网络层数，提高网络的表达能力。</li>
+</ul>
+<ol start="3">
+<li>googLeNet-Inception V1结构<br>
+<img src="6A21DD30B0474E4387C8B57953D725C7" alt="image"></li>
+</ol>
+<h2 id="googlenet-iception-v2介绍">GoogleNet-Iception V2介绍</h2>
+<p>这篇论文主要思想在于提出了Batch Normalization，其次就是稍微改进了一下Inception。</p>
+<ol>
+<li>
+<p>Batch Normalization<br>
+1.实现算法<br>
+<img src="F4ED6B069F554DD0B347848917AEEDBC" alt="image"></p>
+<ol start="2">
+<li>BN的本质：<br>
+我的理解BN的主要作用就是：</li>
+</ol>
+<ul>
+<li>① 加速网络训练</li>
+<li>② 防止梯度消失</li>
+</ul>
+<p><img src="3251A531F2B546138DBD92CA6A1145A3" alt="image"></p>
+</li>
+<li>
+<p>Inception V2结构：<br>
+大尺寸的卷积核可以带来更大的感受野，也意味着更多的参数，比如5x5卷积核参数是3x3卷积核的25/9=2.78倍。为此，作者提出可以用2个连续的3x3卷积层(stride=1)组成的小网络来代替单个的5x5卷积层，这便是Inception V2结构。这也是VGG那篇论文所提到的思想。这样做法有两个优点：</p>
+<ul>
+<li>① 保持相同感受野的同时减少参数</li>
+<li>② 加强非线性的表达能力<br>
+<img src="2DEED40BDCDE4DAEBA6DBBF7C4391DD2" alt="image"><br>
+<img src="86D3077B142E49E0AE56D75D58918253" alt="image"></li>
+</ul>
+</li>
+</ol>
+<h2 id="googlenet-iception-v3介绍">GoogleNet-Iception V3介绍</h2>
+<p>大卷积核完全可以由一系列的3x3卷积核来替代，那能不能分解的更小一点呢。Inception V2中：将 5X5 的卷积核替换成2个  3X3 的卷积核<br>
+++另一种方法就是将nxn的卷积都可以通过1xn卷积后接nx1卷积来替代，计算量又会降低++。但是第二种分解方法在大维度的特征图上表现不好，在特征图12-20维度上表现好。不对称分解方法有几个优点：</p>
+<ul>
+<li>① 节约了大量的参数</li>
+<li>② 增加一层非线性，提高模型的表达能力</li>
+<li>③ 可以处理更丰富的空间特征，增加特征的多样性<br>
+<img src="27111F70FFD347DAAAF9888954C001EA" alt="image"><br>
+<img src="78D6FDC2921D4E2E89568C842F8B9BA6" alt="image"></li>
+</ul>
+<h2 id="googlenet-iception-v4介绍">GoogleNet-Iception V4介绍</h2>
+<ol>
+<li>这篇论文，没有公式，全篇都是画图，就是网络结构。主要思想很简单：Inception表现很好，很火的ResNet表现也很好，那就想办法把他们结合起来呗。</li>
+</ol>
+<p><img src="A9FD70E066CD49BDB243FF520DC39590" alt="image"><br>
+<img src="90F27336AC8C49AA9E2878E4A8089250" alt="image"></p>
+<p>PS: ==注意Inception-v4 network没有把Inception与ResNet结合==，Inception-ResNet才是将二者结合。</p>
+<p>Inception-v4：<br>
+<img src="489D23333D9846EFBA6DA586DAC224F6" alt="image"></p>
+<p><strong>Inception-resnet moduels</strong>：<br>
+<img src="1FBC5F537DD7416F914A6AF7791A2BBC" alt="image"></p>
+<ol start="2">
+<li>
+<p>还有几个作者通过实验总结的几个知识点：。</p>
+<ul>
+<li>
+<p>① Residual Connection： 作者认为残差连接并不是深度网络所必须的（PS：ResNet的作者说残差连接时深度网络的标配），没有残差连接的网络训练起来并不困难，因为有好的初始化以及Batch Normalization，但是它确实可以大大的提升网路训练的速度。</p>
+</li>
+<li>
+<p>② Residual Inception Block：<br>
+<img src="DB67B612F6DB46299410490432C55099" alt="image"><br>
+画圈的部分，那个1×1的卷积层并没有激活函数，这个作用主要是维度对齐。</p>
+</li>
+<li>
+<p>③ Scaling of the Residual：当过滤器的数目超过1000个的时候，会出现问题，网络会“坏死”，即在average pooling层前都变成0。即使降低学习率，增加BN层都没有用。这时候就在激活前缩小残差可以保持稳定。即下图：<br>
+<img src="2E1D1807CF00467DAC38FACF11FC867E" alt="image"></p>
+</li>
+<li>
+<p>网络精度提高原因：残差连接只能加速网络收敛，真正提高网络精度的还是“更大的网络规模”。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="tensorflow20实战googlenet_inception_v4">Tensorflow2.0实战GoogleNet_inception_V4</h1>
+<p><a href="https://github.com/calmisential/InceptionV4_TensorFlow2/blob/master/inception_modules.py" target="_blank" rel="noopener">https://github.com/calmisential/InceptionV4_TensorFlow2/blob/master/inception_modules.py</a></p>
+<ol>
+<li>inception_modules.py</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import tensorflow as tf</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class BasicConv2D(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self, filters, kernel_size, strides, padding):</span><br><span class="line">        super(BasicConv2D, self).__init__()</span><br><span class="line">        self.conv = tf.keras.layers.Conv2D(filters=filters,</span><br><span class="line">                                           kernel_size=kernel_size,</span><br><span class="line">                                           strides=strides,</span><br><span class="line">                                           padding=padding)</span><br><span class="line">        self.bn = tf.keras.layers.BatchNormalization()</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        x = self.conv(inputs)</span><br><span class="line">        x = self.bn(x, training=training)</span><br><span class="line">        x = tf.nn.relu(x)</span><br><span class="line"></span><br><span class="line">        return x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class Stem(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(Stem, self).__init__()</span><br><span class="line">        self.conv1 = BasicConv2D(filters=32,</span><br><span class="line">                                 kernel_size=(3, 3),</span><br><span class="line">                                 strides=2,</span><br><span class="line">                                 padding=&quot;valid&quot;)</span><br><span class="line">        self.conv2 = BasicConv2D(filters=32,</span><br><span class="line">                                 kernel_size=(3, 3),</span><br><span class="line">                                 strides=1,</span><br><span class="line">                                 padding=&quot;valid&quot;)</span><br><span class="line">        self.conv3 = BasicConv2D(filters=64,</span><br><span class="line">                                 kernel_size=(3, 3),</span><br><span class="line">                                 strides=1,</span><br><span class="line">                                 padding=&quot;same&quot;)</span><br><span class="line">        self.b1_maxpool = tf.keras.layers.MaxPool2D(pool_size=(3, 3),</span><br><span class="line">                                                    strides=2,</span><br><span class="line">                                                    padding=&quot;valid&quot;)</span><br><span class="line">        self.b2_conv = BasicConv2D(filters=96,</span><br><span class="line">                                   kernel_size=(3, 3),</span><br><span class="line">                                   strides=2,</span><br><span class="line">                                   padding=&quot;valid&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=96,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;valid&quot;)</span><br><span class="line">        self.b4_conv1 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv2 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(7, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv3 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv4 = BasicConv2D(filters=96,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;valid&quot;)</span><br><span class="line">        self.b5_conv = BasicConv2D(filters=192,</span><br><span class="line">                                   kernel_size=(3, 3),</span><br><span class="line">                                   strides=2,</span><br><span class="line">                                   padding=&quot;valid&quot;)</span><br><span class="line">        self.b6_maxpool = tf.keras.layers.MaxPool2D(pool_size=(3, 3),</span><br><span class="line">                                                    strides=2,</span><br><span class="line">                                                    padding=&quot;valid&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        x = self.conv1(inputs, training=training)</span><br><span class="line">        x = self.conv2(x, training=training)</span><br><span class="line">        x = self.conv3(x, training=training)</span><br><span class="line">        branch_1 = self.b1_maxpool(x)</span><br><span class="line">        branch_2 = self.b2_conv(x, training=training)</span><br><span class="line">        x = tf.concat(values=[branch_1, branch_2], axis=-1)</span><br><span class="line">        branch_3 = self.b3_conv1(x, training=training)</span><br><span class="line">        branch_3 = self.b3_conv2(branch_3, training=training)</span><br><span class="line">        branch_4 = self.b4_conv1(x, training=training)</span><br><span class="line">        branch_4 = self.b4_conv2(branch_4, training=training)</span><br><span class="line">        branch_4 = self.b4_conv3(branch_4, training=training)</span><br><span class="line">        branch_4 = self.b4_conv4(branch_4, training=training)</span><br><span class="line">        x = tf.concat(values=[branch_3, branch_4], axis=-1)</span><br><span class="line">        branch_5 = self.b5_conv(x, training=training)</span><br><span class="line">        branch_6 = self.b6_maxpool(x, training=training)</span><br><span class="line">        x = tf.concat(values=[branch_5, branch_6], axis=-1)</span><br><span class="line"></span><br><span class="line">        return x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionBlockA(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionBlockA, self).__init__()</span><br><span class="line">        self.b1_pool = tf.keras.layers.AveragePooling2D(pool_size=(3, 3),</span><br><span class="line">                                                        strides=1,</span><br><span class="line">                                                        padding=&quot;same&quot;)</span><br><span class="line">        self.b1_conv = BasicConv2D(filters=96,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b2_conv = BasicConv2D(filters=96,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=96,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv1 = BasicConv2D(filters=64,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv2 = BasicConv2D(filters=96,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv3 = BasicConv2D(filters=96,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        b1 = self.b1_pool(inputs)</span><br><span class="line">        b1 = self.b1_conv(b1, training=training)</span><br><span class="line"></span><br><span class="line">        b2 = self.b2_conv(inputs, training=training)</span><br><span class="line"></span><br><span class="line">        b3 = self.b3_conv1(inputs, training=training)</span><br><span class="line">        b3 = self.b3_conv2(b3, training=training)</span><br><span class="line"></span><br><span class="line">        b4 = self.b4_conv1(inputs, training=training)</span><br><span class="line">        b4 = self.b4_conv2(b4, training=training)</span><br><span class="line">        b4 = self.b4_conv3(b4, training=training)</span><br><span class="line"></span><br><span class="line">        return tf.concat(values=[b1, b2, b3, b4], axis=-1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ReductionA(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self, k, l, m, n):</span><br><span class="line">        super(ReductionA, self).__init__()</span><br><span class="line">        self.b1_pool = tf.keras.layers.MaxPool2D(pool_size=(3, 3),</span><br><span class="line">                                                 strides=2,</span><br><span class="line">                                                 padding=&quot;valid&quot;)</span><br><span class="line">        self.b2_conv = BasicConv2D(filters=n,</span><br><span class="line">                                   kernel_size=(3, 3),</span><br><span class="line">                                   strides=2,</span><br><span class="line">                                   padding=&quot;valid&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=k,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=l,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv3 = BasicConv2D(filters=m,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=2,</span><br><span class="line">                                    padding=&quot;valid&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        b1 = self.b1_pool(inputs)</span><br><span class="line"></span><br><span class="line">        b2 = self.b2_conv(inputs, training=training)</span><br><span class="line"></span><br><span class="line">        b3 = self.b3_conv1(inputs, training=training)</span><br><span class="line">        b3 = self.b3_conv2(b3, training=training)</span><br><span class="line">        b3 = self.b3_conv3(b3, training=training)</span><br><span class="line"></span><br><span class="line">        return tf.concat(values=[b1, b2, b3], axis=-1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionBlockB(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionBlockB, self).__init__()</span><br><span class="line">        self.b1_pool = tf.keras.layers.AveragePooling2D(pool_size=(3, 3),</span><br><span class="line">                                                        strides=1,</span><br><span class="line">                                                        padding=&quot;same&quot;)</span><br><span class="line">        self.b1_conv = BasicConv2D(filters=128,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b2_conv = BasicConv2D(filters=384,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=192,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=224,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv3 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv1 = BasicConv2D(filters=192,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv2 = BasicConv2D(filters=192,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv3 = BasicConv2D(filters=224,</span><br><span class="line">                                    kernel_size=(7, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv4 = BasicConv2D(filters=224,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv5 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(7, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        b1 = self.b1_pool(inputs)</span><br><span class="line">        b1 = self.b1_conv(b1, training=training)</span><br><span class="line"></span><br><span class="line">        b2 = self.b2_conv(inputs, training=training)</span><br><span class="line"></span><br><span class="line">        b3 = self.b3_conv1(inputs, training=training)</span><br><span class="line">        b3 = self.b3_conv2(b3, training=training)</span><br><span class="line">        b3 = self.b3_conv3(b3, training=training)</span><br><span class="line"></span><br><span class="line">        b4 = self.b4_conv1(inputs, training=training)</span><br><span class="line">        b4 = self.b4_conv2(b4, training=training)</span><br><span class="line">        b4 = self.b4_conv3(b4, training=training)</span><br><span class="line">        b4 = self.b4_conv4(b4, training=training)</span><br><span class="line">        b4 = self.b4_conv5(b4, training=training)</span><br><span class="line"></span><br><span class="line">        return tf.concat(values=[b1, b2, b3, b4], axis=-1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class ReductionB(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(ReductionB, self).__init__()</span><br><span class="line">        self.b1_pool = tf.keras.layers.MaxPool2D(pool_size=(3, 3),</span><br><span class="line">                                                 strides=2,</span><br><span class="line">                                                 padding=&quot;valid&quot;)</span><br><span class="line">        self.b2_conv1 = BasicConv2D(filters=192,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b2_conv2 = BasicConv2D(filters=192,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=2,</span><br><span class="line">                                    padding=&quot;valid&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(1, 7),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv3 = BasicConv2D(filters=320,</span><br><span class="line">                                    kernel_size=(7, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv4 = BasicConv2D(filters=320,</span><br><span class="line">                                    kernel_size=(3, 3),</span><br><span class="line">                                    strides=2,</span><br><span class="line">                                    padding=&quot;valid&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        b1 = self.b1_pool(inputs)</span><br><span class="line"></span><br><span class="line">        b2 = self.b2_conv1(inputs, training=training)</span><br><span class="line">        b2 = self.b2_conv2(b2, training=training)</span><br><span class="line"></span><br><span class="line">        b3 = self.b3_conv1(inputs, training=training)</span><br><span class="line">        b3 = self.b3_conv2(b3, training=training)</span><br><span class="line">        b3 = self.b3_conv3(b3, training=training)</span><br><span class="line">        b3 = self.b3_conv4(b3, training=training)</span><br><span class="line"></span><br><span class="line">        return tf.concat(values=[b1, b2, b3], axis=-1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionBlockC(tf.keras.layers.Layer):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionBlockC, self).__init__()</span><br><span class="line">        self.b1_pool = tf.keras.layers.AveragePooling2D(pool_size=(3, 3),</span><br><span class="line">                                                        strides=1,</span><br><span class="line">                                                        padding=&quot;same&quot;)</span><br><span class="line">        self.b1_conv = BasicConv2D(filters=256,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b2_conv = BasicConv2D(filters=256,</span><br><span class="line">                                   kernel_size=(1, 1),</span><br><span class="line">                                   strides=1,</span><br><span class="line">                                   padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv1 = BasicConv2D(filters=384,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv2 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(1, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b3_conv3 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(3, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv1 = BasicConv2D(filters=384,</span><br><span class="line">                                    kernel_size=(1, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv2 = BasicConv2D(filters=448,</span><br><span class="line">                                    kernel_size=(1, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv3 = BasicConv2D(filters=512,</span><br><span class="line">                                    kernel_size=(3, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv4 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(3, 1),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line">        self.b4_conv5 = BasicConv2D(filters=256,</span><br><span class="line">                                    kernel_size=(1, 3),</span><br><span class="line">                                    strides=1,</span><br><span class="line">                                    padding=&quot;same&quot;)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=None, **kwargs):</span><br><span class="line">        b1 = self.b1_pool(inputs)</span><br><span class="line">        b1 = self.b1_conv(b1, training=training)</span><br><span class="line"></span><br><span class="line">        b2 = self.b2_conv(inputs, training=training)</span><br><span class="line"></span><br><span class="line">        b3 = self.b3_conv1(inputs, training=training)</span><br><span class="line">        b3_1 = self.b3_conv2(b3, training=training)</span><br><span class="line">        b3_2 = self.b3_conv3(b3, training=training)</span><br><span class="line"></span><br><span class="line">        b4 = self.b4_conv1(inputs, training=training)</span><br><span class="line">        b4 = self.b4_conv2(b4, training=training)</span><br><span class="line">        b4 = self.b4_conv3(b4, training=training)</span><br><span class="line">        b4_1 = self.b4_conv4(b4, training=training)</span><br><span class="line">        b4_2 = self.b4_conv5(b4, training=training)</span><br><span class="line"></span><br><span class="line">        return tf.concat(values=[b1, b2, b3_1, b3_2, b4_1, b4_2], axis=-1)</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>inception_v4.py</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import tensorflow as tf</span><br><span class="line">from inception_modules import Stem, InceptionBlockA, InceptionBlockB, \</span><br><span class="line">    InceptionBlockC, ReductionA, ReductionB</span><br><span class="line"></span><br><span class="line">NUM_CLASSES = 10</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def build_inception_block_a(n):</span><br><span class="line">    block = tf.keras.Sequential()</span><br><span class="line">    for _ in range(n):</span><br><span class="line">        block.add(InceptionBlockA())</span><br><span class="line">    return block</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def build_inception_block_b(n):</span><br><span class="line">    block = tf.keras.Sequential()</span><br><span class="line">    for _ in range(n):</span><br><span class="line">        block.add(InceptionBlockB())</span><br><span class="line">    return block</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">def build_inception_block_c(n):</span><br><span class="line">    block = tf.keras.Sequential()</span><br><span class="line">    for _ in range(n):</span><br><span class="line">        block.add(InceptionBlockC())</span><br><span class="line">    return block</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class InceptionV4(tf.keras.Model):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(InceptionV4, self).__init__()</span><br><span class="line">        self.stem = Stem()</span><br><span class="line">        self.inception_a = build_inception_block_a(4)</span><br><span class="line">        self.reduction_a = ReductionA(k=192, l=224, m=256, n=384)</span><br><span class="line">        self.inception_b = build_inception_block_b(7)</span><br><span class="line">        self.reduction_b = ReductionB()</span><br><span class="line">        self.inception_c = build_inception_block_c(3)</span><br><span class="line"></span><br><span class="line">        self.avgpool = tf.keras.layers.AveragePooling2D(pool_size=(8, 8))</span><br><span class="line"></span><br><span class="line">        self.dropout = tf.keras.layers.Dropout(rate=0.2)</span><br><span class="line">        self.flat = tf.keras.layers.Flatten()</span><br><span class="line">        self.fc = tf.keras.layers.Dense(units=NUM_CLASSES,</span><br><span class="line">                                        activation=tf.keras.activations.softmax)</span><br><span class="line"></span><br><span class="line">    def call(self, inputs, training=True, mask=None):</span><br><span class="line">        x = self.stem(inputs, training=training)</span><br><span class="line">        x = self.inception_a(x, training=training)</span><br><span class="line">        print(x)</span><br><span class="line">        x = self.reduction_a(x, training=training)</span><br><span class="line">        x = self.inception_b(x, training=training)</span><br><span class="line">        x = self.reduction_b(x, training=training)</span><br><span class="line">        x = self.inception_c(x, training=training)</span><br><span class="line">        print(&apos;inception_c：&apos;,x)</span><br><span class="line">        x = self.avgpool(x)</span><br><span class="line">        x = self.dropout(x, training=training)</span><br><span class="line">        x = self.flat(x)</span><br><span class="line">        x = self.fc(x)</span><br><span class="line"></span><br><span class="line">        return x</span><br></pre></td></tr></table></figure>
+<p>PS： 不能直接用上诉网络来进行mnist数据集的训练，因为参数的原因<br>
+<img src="B56B006775B648A29CC2D16EC4F79D4F" alt="image"><br>
+<img src="9795D1FAC9664566B9F13C8D4D96D9FF" alt="image"><br>
+minist数据集的图片像素为28<em>28=786 ，比这个小<br>
+(图片像素必须大于或等于299</em>299才可)</p>
+<p>注意：299，299，1 也行<br>
+<img src="C042A2A5A4114EED91FE9BA45BFC350D" alt="image"><br>
+<img src="225B90B19B2C47EAB87EA371B08764E0" alt="image"></p>
+<p>注：如下就不行了：<br>
+<img src="57860F23240A4A07B5A689217DE81EDF" alt="image"><br>
+<img src="84BB5069559047B0A3EDB86F7C2ABE2B" alt="image"></p>
+<p>解析：<br>
+<img src="95CF998D45674AA484AFDA71DD308135" alt="image"><br>
+<img src="F8A703A4763F40DABF614365884779FD" alt="image"></p>
+<p>而我们的200，200，1在如下出来：<br>
+<img src="AFF610FB639D4CF2889483961250B8F6" alt="image"><br>
+变为：<img src="46932645396F4DE1972EC8F50AC15765" alt="image"><br>
+所以不能用 Average Pooling的8*8了</p>
+<p>所以，若想用来训练mnist数据集，必须改网络结构的参数，甚至结构</p>
+<ol start="3">
+<li>我的错误代码：（由于mnist数据集不足以用此网络）<br>
+inception_V4_mnist.py：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import tensorflow as tf</span><br><span class="line">from tensorflow.python.keras.api._v2.keras import layers, optimizers, datasets, Sequential</span><br><span class="line">import tensorflow.keras as keras</span><br><span class="line">import numpy as np</span><br><span class="line">import inception_v4</span><br><span class="line"></span><br><span class="line">import os</span><br><span class="line">os.environ[&apos;TF_CPP_MIN_LOG_LEVEL&apos;] = &apos;2&apos;</span><br><span class="line">tf.random.set_seed(22)</span><br><span class="line"></span><br><span class="line">batchsize = 512</span><br><span class="line"></span><br><span class="line">def preprocess(x, y):  #数据预处理</span><br><span class="line">    x = tf.cast(x, dtype=tf.float32)/ 255. - 0.5</span><br><span class="line">    y = tf.cast(y, dtype=tf.int32)</span><br><span class="line">    return x,y</span><br><span class="line"></span><br><span class="line">(x_train, y_train),(x_test, y_test) = datasets.mnist.load_data()</span><br><span class="line"></span><br><span class="line">print(x_train.shape, y_train.shape)</span><br><span class="line"></span><br><span class="line"># # [b, 28, 28] =&gt; [b, 28, 28, 1]</span><br><span class="line"># x_train, x_test = np.expand_dims(x_train, axis=3), np.expand_dims(x_test, axis=3)</span><br><span class="line"></span><br><span class="line">#训练集预处理</span><br><span class="line">db_train = tf.data.Dataset.from_tensor_slices((x_train,y_train)) #构造数据集,这里可以自动的转换为tensor类型了</span><br><span class="line">db_train = db_train.map(preprocess).shuffle(10000).batch(batchsize)</span><br><span class="line"></span><br><span class="line">#测试集预处理</span><br><span class="line">db_test = tf.data.Dataset.from_tensor_slices((x_test,y_test)) #构造数据集</span><br><span class="line">db_test = db_test.map(preprocess).shuffle(10000).batch(batchsize)</span><br><span class="line"></span><br><span class="line">db_iter = iter(db_train)</span><br><span class="line">sample = next(db_iter)</span><br><span class="line">print(&quot;batch: &quot;, sample[0].shape, sample[1].shape)</span><br><span class="line"></span><br><span class="line"># 调用Inception</span><br><span class="line">model = inception_v4.InceptionV4()  #记得加（），否则只是一个类，不是一个实例，下面用build（）时会报错</span><br><span class="line">print(model)</span><br><span class="line"># derive input shape for every layers.</span><br><span class="line">model.build(input_shape=(None, 299, 299, 1))</span><br><span class="line">model.summary()</span><br><span class="line"></span><br><span class="line">optimizer =optimizers.Adam(learning_rate=1e-3)</span><br><span class="line">criteon = keras.losses.CategoricalCrossentropy(from_logits=True)  # 分类器</span><br><span class="line"></span><br><span class="line">acc_meter = keras.metrics.Accuracy()</span><br><span class="line"></span><br><span class="line">for epoch in range(100):</span><br><span class="line"></span><br><span class="line">    for step, (x, y) in enumerate(db_train):</span><br><span class="line"></span><br><span class="line">        with tf.GradientTape() as tape:</span><br><span class="line">            # print(x.shape, y.shape)</span><br><span class="line">            # [b, 10]</span><br><span class="line">            logits = model(x)</span><br><span class="line">            # [b] vs [b, 10]</span><br><span class="line">            loss = criteon(tf.one_hot(y, depth=10), logits)</span><br><span class="line"></span><br><span class="line">        grads = tape.gradient(loss, model.trainable_variables)</span><br><span class="line">        optimizer.apply_gradients(zip(grads, model.trainable_variables))</span><br><span class="line"></span><br><span class="line">        if step % 20 == 0:</span><br><span class="line">            print(epoch, step, &apos;loss:&apos;, loss.numpy())</span><br><span class="line"></span><br><span class="line">    # 测试集测试</span><br><span class="line">    acc_meter.reset_states()</span><br><span class="line">    for x, y in db_test:</span><br><span class="line">        # [b, 10]</span><br><span class="line">        logits = model(x, training=False)</span><br><span class="line">        # [b, 10] =&gt; [b]</span><br><span class="line">        pred = tf.argmax(logits, axis=1)</span><br><span class="line">        # [b] vs [b, 10]</span><br><span class="line">        acc_meter.update_state(y, pred)</span><br><span class="line"></span><br><span class="line">    print(epoch, &apos;evaluation acc:&apos;, acc_meter.result().numpy())</span><br></pre></td></tr></table></figure>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/article/TexLive安裝/" data-toggle="tooltip" data-placement="top" title="TexLive安装">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/article/为什么有的CNN需要固定输入图像的尺寸（CNN图像尺寸输入限制问题）/" data-toggle="tooltip" data-placement="top" title="为什么有的CNN需要固定输入图像的尺寸（CNN图像尺寸输入限制问题）">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <br>
+
+                <!--打赏-->
+                
+                <!--打赏-->
+
+                <br>
+                <!--分享-->
+                
+                    <div class="social-share"  data-wechat-qrcode-helper="" align="center"></div>
+                    <!--  css & js -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+                
+                <!--分享-->
+                <br>                       
+                
+                <!-- require APlayer -->
+                
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+
+                
+
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#深度学习" title="深度学习">深度学习</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://me.csdn.net/qq_42804626" target="_blank">CSDN Blog potterr</a></li>
+                    
+                        <li><a href="https://www.cnblogs.com/never-ceasing-wave/" target="_blank">博客园 一只有理想的程序员</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+<!-- chrome Firefox 中文锚点定位失效-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<!-- smooth scroll behavior polyfill  -->
+<script type="text/javascript" src="/js/smoothscroll.js"></script>
+<script>
+        $('#toc').on('click','a',function(a){
+            // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+            // console.log(window.navigator.userAgent,isChrome)
+                // if(isChrome) {
+                    // console.log(a.currentTarget.outerHTML);
+                    // console.log($(a.currentTarget).attr("href"));
+                    //跳转到指定锚点
+                    // document.getElementById(a.target.innerText.toLowerCase()).scrollIntoView(true);
+                    document.getElementById($(a.currentTarget).attr("href").replace("#","")).scrollIntoView({behavior: 'smooth' });
+                // }
+        })  
+</script>
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/fangjuntao/fangjuntao">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Fangjuntao 2022 
+                    <br>
+                    Theme by <a href="http://beantech.org">BeanTech</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    re-Ported by <a href="http://www.huweihuang.com">胡伟煌</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=huweihuang&repo=hexo-theme-huweihuang&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://fangjuntao.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = 'xxx';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<img src="http://fangjuntao.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

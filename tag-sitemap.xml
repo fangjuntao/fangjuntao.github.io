@@ -2,13 +2,6 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://fangjuntao.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/</loc>
-        <lastmod>2020-01-23T07:40:25.701Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://fangjuntao.github.io/tags/%E5%AD%A6%E6%9C%AF%E9%98%85%E8%AF%BB/</loc>
         <lastmod>2020-01-24T03:23:28.288Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -58,15 +51,64 @@
     </url>
 
     <url>
-        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
-        <lastmod>2020-04-11T04:09:53.604Z</lastmod>
+        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%BC%80%E5%8F%91/</loc>
+        <lastmod>2020-04-12T07:25:39.685Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%BC%80%E5%8F%91/</loc>
-        <lastmod>2020-04-12T07:25:39.685Z</lastmod>
+        <loc>http://fangjuntao.github.io/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95%EF%BC%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+        <lastmod>2022-01-03T13:38:37.832Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E8%AF%BE%E7%A8%8B%E4%BD%9C%E4%B8%9A/</loc>
+        <lastmod>2022-01-03T13:40:31.650Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%BC%80%E5%8F%91/</loc>
+        <lastmod>2022-01-03T13:41:46.661Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/</loc>
+        <lastmod>2022-01-03T13:44:17.456Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</loc>
+        <lastmod>2022-01-03T13:50:09.701Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+        <lastmod>2022-01-03T13:52:28.386Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/</loc>
+        <lastmod>2022-01-03T13:53:00.868Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</loc>
+        <lastmod>2022-01-03T13:54:02.891Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
