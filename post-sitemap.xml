@@ -7,8 +7,40 @@
     </url>
 
     <url>
+        <loc>http://fangjuntao.github.io/article/resnet%E5%AE%9E%E6%88%98/</loc>
+        <lastmod>2022-01-06T04:28:17.044Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/article/ResNeXt/</loc>
+        <lastmod>2022-01-06T04:23:53.198Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/article/%E5%BC%82%E6%88%96%E5%8A%A0%E8%A7%A3%E5%AF%86%E4%BD%9C%E4%B8%9A/</loc>
+        <lastmod>2022-01-06T04:19:11.473Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://fangjuntao.github.io/article/GoogleNet-Iception%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98/</loc>
+        <lastmod>2022-01-06T04:12:29.555Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://fangjuntao.github.io/article/TexLive%E5%AE%89%E8%A3%9D/</loc>
-        <lastmod>2022-01-03T13:54:02.891Z</lastmod>
+        <lastmod>2022-01-06T04:01:19.546Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -17,22 +49,6 @@
     <url>
         <loc>http://fangjuntao.github.io/article/Latex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</loc>
         <lastmod>2022-01-03T13:53:00.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://fangjuntao.github.io/article/ResNeXt/</loc>
-        <lastmod>2022-01-03T13:52:28.386Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://fangjuntao.github.io/article/GoogleNet-Iception%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%9E%E6%88%98/</loc>
-        <lastmod>2022-01-03T13:51:49.769Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -57,22 +73,6 @@
     <url>
         <loc>http://fangjuntao.github.io/article/%E7%BB%93%E9%98%9F%E7%BC%96%E7%A8%8B--%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E5%B0%8F%E5%AD%A6%E5%9B%9B%E5%88%99%E8%BF%90%E7%AE%97%E9%A2%98%E7%9B%AE%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%A8%8B%E5%BA%8F/</loc>
         <lastmod>2022-01-03T13:41:46.661Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://fangjuntao.github.io/article/%E5%BC%82%E6%88%96%E5%8A%A0%E8%A7%A3%E5%AF%86%E4%BD%9C%E4%B8%9A/</loc>
-        <lastmod>2022-01-03T13:40:31.650Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://fangjuntao.github.io/article/resnet%E5%AE%9E%E6%88%98/</loc>
-        <lastmod>2022-01-03T13:38:37.832Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -153,14 +153,6 @@
     <url>
         <loc>http://fangjuntao.github.io/article/02%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/</loc>
         <lastmod>2020-01-29T08:06:35.860Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://fangjuntao.github.io/article/hexo-theme-huweihuang/</loc>
-        <lastmod>2020-01-24T03:23:52.488Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
