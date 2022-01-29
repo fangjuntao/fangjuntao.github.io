@@ -8,7 +8,7 @@
     
     <url>
         <loc>http://fangjuntao.github.io/about/</loc>
-        <lastmod>2020-03-29T10:16:49.057Z</lastmod>
+        <lastmod>2022-01-29T15:17:17.814Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -21,14 +21,14 @@
     </url>
     
     <url>
-        <loc>http://fangjuntao.github.io/tags/</loc>
+        <loc>http://fangjuntao.github.io/archive/</loc>
         <lastmod>2019-08-17T03:43:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://fangjuntao.github.io/archive/</loc>
+        <loc>http://fangjuntao.github.io/tags/</loc>
         <lastmod>2019-08-17T03:43:34.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
